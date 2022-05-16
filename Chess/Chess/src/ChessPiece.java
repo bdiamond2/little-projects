@@ -106,6 +106,10 @@ public abstract class ChessPiece {
 		return new int[] {x, y};
 	}
 	
+	public int getMaterialValue() {
+		return materialValue;
+	}
+	
 	/**
 	 * Returns all the possible positions this piece could move
 	 * @return ArrayList of [x,y] positions where this piece could move, null if there are no possible positions
