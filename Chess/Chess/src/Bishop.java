@@ -1,11 +1,9 @@
 import java.util.ArrayList;
 
-public class King extends ChessPiece {
-	private boolean isInCheck = false;
-	
-	public King(ChessColor color, Board board, int x, int y) {
-		// notion of material value doesn't apply to kings
-		super("King", color, 0, board, x, y);
+public class Bishop extends ChessPiece {
+
+	public Bishop(ChessColor color, Board board, int x, int y) {
+		super("Bishop", color, 3, board, x, y);
 	}
 
 	@Override
@@ -17,7 +15,7 @@ public class King extends ChessPiece {
 	@Override
 	public void move(int x, int y) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -29,21 +27,13 @@ public class King extends ChessPiece {
 	@Override
 	public void capture(int x, int y) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public ArrayList<Integer[]> getMoveablePositions() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	public boolean isInCheck() {
-		return isInCheck;
-	}
-	
-	public void castle() {
-		
 	}
 
 }
