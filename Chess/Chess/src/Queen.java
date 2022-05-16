@@ -35,5 +35,9 @@ public class Queen extends ChessPiece {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	@Override
+	public String toString() {
+		return ChessPiece.toStringCompact("Q", getColor());
+	}
 }

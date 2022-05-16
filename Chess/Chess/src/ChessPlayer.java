@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class ChessPlayer {
 
-	ArrayList<ChessPiece> material = new ArrayList<ChessPiece>();
+//	ArrayList<ChessPiece> material = new ArrayList<ChessPiece>();
 
 	public ChessPlayer(String name) {
 		
@@ -13,16 +13,16 @@ public class ChessPlayer {
 
 	}
 	
-	public void addPiece(ChessPiece piece) {
-		material.add(piece);
-	}
+//	public void addPiece(ChessPiece piece) {
+//		material.add(piece);
+//	}
 	
 	public int getTotalMaterialValue() {
 		int total = 0;
 		
-		for (ChessPiece i : material) {
-			total += i.getMaterialValue();
-		}
+//		for (ChessPiece i : material) {
+//			total += i.getMaterialValue();
+//		}
 		
 		return total;
 	}

@@ -36,4 +36,9 @@ public class Rook extends ChessPiece {
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		return ChessPiece.toStringCompact("R", getColor());
+	}
+	
 }

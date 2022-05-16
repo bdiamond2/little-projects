@@ -38,6 +38,11 @@ public class King extends ChessPiece {
 		return null;
 	}
 	
+	@Override
+	public String toString() {
+		return ChessPiece.toStringCompact("K", getColor());
+	}
+	
 	public boolean isInCheck() {
 		return isInCheck;
 	}

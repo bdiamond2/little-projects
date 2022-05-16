@@ -35,5 +35,10 @@ public class Pawn extends ChessPiece {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public String toString() {
+		return ChessPiece.toStringCompact("P", getColor());
+	}
 
 }

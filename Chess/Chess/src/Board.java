@@ -38,15 +38,39 @@ public class Board {
 		}
 
 		// give each player their material
-		for (int i = 0; i < 8; i++) {
-			white.addPiece(board[i][0]);
-			white.addPiece(board[i][1]);
-			black.addPiece(board[i][6]);
-			black.addPiece(board[i][7]);
-		}
-
-
+//		for (int i = 0; i < 8; i++) {
+//			white.addPiece(board[i][0]);
+//			white.addPiece(board[i][1]);
+//			black.addPiece(board[i][6]);
+//			black.addPiece(board[i][7]);
+//		}
 	}
 
+	@Override
+	public String toString() {
+		String result = "";
+		String nextSquare;
+		for (int y = 7; y >= 0; y--) {
+			for (int x = 0; x <= 7; x++) {
+				if (board[x][y] == null) {
+					nextSquare = " __";
+				}
+				else {
+					nextSquare = board[x][y].toString();
+				}
+				result += " " + nextSquare;
+			}
+			result += "\n";
+		}
+		return result;
+	}
 
 }
+
+
+
+
+
+
+
+

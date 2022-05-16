@@ -121,6 +121,16 @@ public abstract class ChessPiece {
 		return this.COLOR + " " + this.NAME;
 	}
 	
-	
+	public static String toStringCompact(String pieceAbbrev, ChessColor color) {
+		String result = "";
+		if (color == ChessColor.WHITE) {
+			result = "w_";
+		}
+		else {
+			result = "b_";
+		}
+		result += pieceAbbrev;
+		return result;
+	}
 	
 }

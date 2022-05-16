@@ -2,8 +2,8 @@
 public class ChessGame {
 
 	public static void main(String[] args) {
-		Bishop b = new Bishop(ChessColor.BLACK, null, 1, 1);
-
+		Board b = new Board(new ChessPlayer("Ben"), new ChessPlayer("Maithilee"));
+		System.out.println(b);
 	}
 
 }
