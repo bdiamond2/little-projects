@@ -38,7 +38,7 @@ public class Bishop extends ChessPiece {
 	
 	@Override
 	public String toString() {
-		return ChessPiece.toStringCompact("R", getColor());
+		return ChessPiece.toStringCompact("B", getColor());
 	}
 
 }
