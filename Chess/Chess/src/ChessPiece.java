@@ -53,7 +53,15 @@ public abstract class ChessPiece {
 	 * @param x x-coord of the square to move to
 	 * @param y y-coord of the square to move to
 	 */
-	public abstract void move(int x, int y);
+	public void move(int x, int y) {
+		if (!this.canMove(x, y)) {
+			throw new IllegalArgumentException("Not a valid move");
+		}
+
+		this.board.moveOrCapture(this.x, this.y, x, y);
+		this.x = x;
+		this.y = y;
+	}
 	
 	/**
 	 * Returns all the possible positions this piece could move

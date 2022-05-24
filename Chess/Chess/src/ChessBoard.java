@@ -80,4 +80,27 @@ public class ChessBoard {
 		return x <= 7 && x >=0
 				&& y <= 7 && y >= 0;
 	}
+	
+	/**
+	 * Naively moves the piece at (x1,y1) to (x2,y2). CALLER MUST ENSURE THE MOVE/CAPTURE IS LEGAL. If there is a piece
+	 * at the target square, this acts as a capture. If not, this acts as a move.
+	 * @param x1 source square x-coord
+	 * @param y1 source square y-coord
+	 * @param x2 target square x-coord
+	 * @param y2 target square y-coord
+	 */
+	public void moveOrCapture(int x1, int y1, int x2, int y2) {
+		if (!isOnBoard(x1, y1)) {
+			throw new IllegalArgumentException("Invalid source square");
+		}
+		if (!isOnBoard(x2, y2)) {
+			throw new IllegalArgumentException("Invalid target square");
+		}
+		if (this.getSquare(x1, y1) == null) {
+			throw new IllegalArgumentException("You can't move nothing");
+		}
+		
+		this.board[x2][y2] = this.board[x1][y1]; // replace
+		this.board[x1][y1] = null; // leave null
+	}
 }
