@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class King extends ChessPiece {
 	private boolean isInCheck = false;
 	
-	public King(ChessColor color, Board board, int x, int y) {
+	public King(ChessColor color, ChessBoard board, int x, int y) {
 		// notion of material value doesn't apply to kings
 		super("King", color, 0, board, x, y);
 	}
@@ -33,7 +33,7 @@ public class King extends ChessPiece {
 	}
 
 	@Override
-	public ArrayList<Integer[]> getMoveablePositions() {
+	public ArrayList<Integer[]> getPossibleMoves() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -1,10 +1,10 @@
 
-public class Board {
+public class ChessBoard {
 	private ChessPiece[][] board = new ChessPiece[8][8]; //[x][y]
 	private ChessPlayer white;
 	private ChessPlayer black;
 
-	public Board(ChessPlayer white, ChessPlayer black) {
+	public ChessBoard(ChessPlayer white, ChessPlayer black) {
 		this.white = white;
 		this.black = black;
 		initialize();
@@ -64,13 +64,20 @@ public class Board {
 		}
 		return result;
 	}
-
+	
+	public ChessPiece getSquare(int x, int y) {
+		return this.board[x][y];
+	}
+	
+	/**
+	 * Returns whether the given x/y coordinates are valid for a standard chess board.
+	 * Does NOT check if this particular piece piece can actually be there.
+	 * @param x x-coord of the square being tested
+	 * @param y y-coord of the square being tested
+	 * @return true if x and y are between 0-7 (inclusive), false if not
+	 */
+	public static boolean isOnBoard(int x, int y) {
+		return x <= 7 && x >=0
+				&& y <= 7 && y >= 0;
+	}
 }
-
-
-
-
-
-
-
-

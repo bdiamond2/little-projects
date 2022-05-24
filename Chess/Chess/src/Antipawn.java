@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 
-public class Knight extends ChessPiece {
+public class Antipawn extends ChessPiece {
 
-	public Knight(ChessColor color, ChessBoard board, int x, int y) {
-		super("Knight", color, 3, board, x, y);
+	public Antipawn(ChessColor color, ChessBoard board, int x, int y) {
+		super("Pawn", color, 1, board, x, y);
 	}
 
 	@Override
@@ -15,7 +15,7 @@ public class Knight extends ChessPiece {
 	@Override
 	public void move(int x, int y) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
@@ -27,18 +27,13 @@ public class Knight extends ChessPiece {
 	@Override
 	public void capture(int x, int y) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public ArrayList<Integer[]> getPossibleMoves() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	@Override
-	public String toString() {
-		return ChessPiece.toStringCompact("N", getColor());
 	}
 
 }

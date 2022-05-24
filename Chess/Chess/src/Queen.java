@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Queen extends ChessPiece {
 
-	public Queen(ChessColor color, Board board, int x, int y) {
+	public Queen(ChessColor color, ChessBoard board, int x, int y) {
 		super("Queen", color, 9, board, x, y);
 	}
 
@@ -31,7 +31,7 @@ public class Queen extends ChessPiece {
 	}
 
 	@Override
-	public ArrayList<Integer[]> getMoveablePositions() {
+	public ArrayList<Integer[]> getPossibleMoves() {
 		// TODO Auto-generated method stub
 		return null;
 	}

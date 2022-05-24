@@ -4,10 +4,10 @@ public abstract class ChessPiece {
 	private final ChessColor COLOR;
 	private final String NAME;
 	private boolean isCaptured = false;
-	private int x = -1;
-	private int y = -1;
+	protected int x = -1;
+	protected int y = -1;
 	private int materialValue = -1; // default value
-	private Board board; // chess board that this piece is on
+	protected ChessBoard board; // chess board that this piece is on
 	
 	/**
 	 * Creates a new chess piece
@@ -24,11 +24,11 @@ public abstract class ChessPiece {
 	 * @param x x-position (file) of the piece
 	 * @param y y-position (rank) of the piece
 	 */
-	public ChessPiece(String name, ChessColor color, int materialValue, Board board, int x, int y) {
+	public ChessPiece(String name, ChessColor color, int materialValue, ChessBoard board, int x, int y) {
 		if (materialValue < 0) {
 			throw new IllegalArgumentException("Material value cannot be negative");
 		}
-		if (!isValidPosition(x, y)) {
+		if (!ChessBoard.isOnBoard(x, y)) {
 			throw new IllegalArgumentException("Invalid x/y coordinates provided");
 		}
 		
@@ -38,18 +38,6 @@ public abstract class ChessPiece {
 		this.board = board;
 		this.x = x;
 		this.y = y;
-	}
-	
-	/**
-	 * Returns whether the given x/y coordinates are valid for a standard chess board.
-	 * Does NOT check if this particular piece piece can actually be there.
-	 * @param x x-coord of the square being tested
-	 * @param y y-coord of the square being tested
-	 * @return true if x and y are between 0-7 (inclusive), false if not
-	 */
-	public static boolean isValidPosition(int x, int y) {
-		return x <= 7 && x >=0
-				&& y <= 7 && y >= 0;
 	}
 	
 	/**
@@ -66,6 +54,12 @@ public abstract class ChessPiece {
 	 * @param y y-coord of the square to move to
 	 */
 	public abstract void move(int x, int y);
+	
+	/**
+	 * Returns all the possible positions this piece could move
+	 * @return ArrayList of [x,y] positions where this piece could move, null if there are no possible positions
+	 */
+	public abstract ArrayList<Integer[]> getPossibleMoves();
 	
 	/**
 	 * Returns whether this piece can capture the piece at (x,y)
@@ -109,12 +103,6 @@ public abstract class ChessPiece {
 	public int getMaterialValue() {
 		return materialValue;
 	}
-	
-	/**
-	 * Returns all the possible positions this piece could move
-	 * @return ArrayList of [x,y] positions where this piece could move, null if there are no possible positions
-	 */
-	public abstract ArrayList<Integer[]> getMoveablePositions();
 	
 	@Override
 	public String toString() {
