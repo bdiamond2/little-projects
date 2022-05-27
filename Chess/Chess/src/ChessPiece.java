@@ -64,33 +64,33 @@ public abstract class ChessPiece {
 	}
 	
 	/**
+     * Returns whether this piece can capture the piece at (x,y)
+     * @param x x-coord of the target square
+     * @param y y-coord of the target square
+     * @return true if this piece can capture the piece at (x,y), false if not
+     */
+    public abstract boolean canCapture(int x, int y);
+    
+    /**
+     * Captures the piece at (x,y)
+     * @param x x-coord of the target square
+     * @param y y-coord of the target square
+     */
+    public abstract void capture(int x, int y);
+    
+    /**
+     * Returns the captured status of this piece
+     * @return true if the piece is in a captured state, false if not
+     */
+    public boolean getCaptured() {
+        return isCaptured;
+    }
+	
+	/**
 	 * Returns all the possible positions this piece could move
 	 * @return ArrayList of [x,y] positions where this piece could move, null if there are no possible positions
 	 */
 	public abstract ArrayList<Integer[]> getPossibleMoves();
-	
-	/**
-	 * Returns whether this piece can capture the piece at (x,y)
-	 * @param x x-coord of the target square
-	 * @param y y-coord of the target square
-	 * @return true if this piece can capture the piece at (x,y), false if not
-	 */
-	public abstract boolean canCapture(int x, int y);
-	
-	/**
-	 * Captures the piece at (x,y)
-	 * @param x x-coord of the target square
-	 * @param y y-coord of the target square
-	 */
-	public abstract void capture(int x, int y);
-	
-	/**
-	 * Returns the captured status of this piece
-	 * @return true if the piece is in a captured state, false if not
-	 */
-	public boolean getCaptured() {
-		return isCaptured;
-	}
 	
 	/**
 	 * Returns the color of this chess piece
@@ -120,10 +120,10 @@ public abstract class ChessPiece {
 	public static String toStringCompact(String pieceAbbrev, ChessColor color) {
 		String result = "";
 		if (color == ChessColor.WHITE) {
-			result = "w_";
+			result = "w";
 		}
 		else {
-			result = "b_";
+			result = "b";
 		}
 		result += pieceAbbrev;
 		return result;

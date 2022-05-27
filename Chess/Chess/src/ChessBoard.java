@@ -13,6 +13,7 @@ public class ChessBoard {
 	private void initialize() {
 		// position is stored in both the board and piece
 		// reference between board and pieces is two-way
+		/*
 		board[0][0] = new Rook(ChessColor.WHITE, this, 0, 0);
 		board[1][0] = new Knight(ChessColor.WHITE, this, 1, 0);
 		board[2][0] = new Bishop(ChessColor.WHITE, this, 2, 0);
@@ -30,20 +31,13 @@ public class ChessBoard {
 		board[5][7] = new Bishop(ChessColor.BLACK, this, 5, 7);
 		board[6][7] = new Knight(ChessColor.BLACK, this, 6, 7);
 		board[7][7] = new Rook(ChessColor.BLACK, this, 7, 7);
+		*/
 
 		// pawns
 		for (int i = 0; i < 8; i++) {
 			board[i][1] = new Pawn(ChessColor.WHITE, this, i, 1);
-			board[i][6] = new Pawn(ChessColor.BLACK, this, i, 1);
+			board[i][6] = new Pawn(ChessColor.BLACK, this, i, 6);
 		}
-
-		// give each player their material
-//		for (int i = 0; i < 8; i++) {
-//			white.addPiece(board[i][0]);
-//			white.addPiece(board[i][1]);
-//			black.addPiece(board[i][6]);
-//			black.addPiece(board[i][7]);
-//		}
 	}
 
 	@Override
@@ -53,15 +47,16 @@ public class ChessBoard {
 		for (int y = 7; y >= 0; y--) {
 			for (int x = 0; x <= 7; x++) {
 				if (board[x][y] == null) {
-					nextSquare = " __";
+					nextSquare = "__";
 				}
 				else {
 					nextSquare = board[x][y].toString();
 				}
-				result += " " + nextSquare;
+				result += "  " + nextSquare;
 			}
 			result += "\n";
 		}
+		result += "\n";
 		return result;
 	}
 	
