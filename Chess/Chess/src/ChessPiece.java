@@ -76,7 +76,15 @@ public abstract class ChessPiece {
      * @param x x-coord of the target square
      * @param y y-coord of the target square
      */
-    public abstract void capture(int x, int y);
+    public void capture(int x, int y) {
+      if (!this.canCapture(x, y)) {
+        throw new IllegalArgumentException("Not a valid capture");
+      }
+      
+      this.board.moveOrCapture(this.x, this.y, x, y);
+      this.x = x;
+      this.y = y;
+    }
     
     /**
      * Returns the captured status of this piece
