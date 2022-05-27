@@ -78,6 +78,27 @@ public class ChessGameTester {
       return false;
     }
     
+    // can't move sideways
+    if (b.getSquare(2, 1).canMove(3, 1)) {
+      return false;
+    }
+    try {
+      b.getSquare(2, 1).move(3, 1);
+      return false;
+    } catch (IllegalArgumentException e) {
+      // good catch
+    } catch (Exception e) {
+      return false;
+    }
+    try {
+      b.getSquare(0, 5).move(1, 5);
+      return false;
+    } catch (IllegalArgumentException e) {
+      // good catch
+    } catch (Exception e) {
+      return false;
+    }
+    
     // BLACK PAWNS
     
     if (b.getSquare(0, 6).canMove(0, 5)) {
@@ -89,7 +110,7 @@ public class ChessGameTester {
     b.getSquare(1, 6).move(1, 5);
     System.out.println(b);
     
-    // no subsequence double move
+    // no subsequent double move
     if (b.getSquare(1, 5).canMove(1, 3)) {
       return false;
     }
