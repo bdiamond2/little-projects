@@ -6,6 +6,8 @@ public abstract class ChessPiece {
 	private boolean isCaptured = false;
 	protected int x = -1;
 	protected int y = -1;
+	protected int prevX = -1;
+	protected int prevY = -1;
 	private int materialValue = -1; // default value
 	protected ChessBoard board; // chess board that this piece is on
 	
@@ -59,6 +61,10 @@ public abstract class ChessPiece {
 		}
 
 		this.board.moveOrCapture(this.x, this.y, x, y);
+		
+		// update positions
+		this.prevX = this.x;
+		this.prevY = this.y;
 		this.x = x;
 		this.y = y;
 	}
@@ -82,6 +88,8 @@ public abstract class ChessPiece {
       }
       
       this.board.moveOrCapture(this.x, this.y, x, y);
+      this.prevX = this.x;
+      this.prevY = this.y;
       this.x = x;
       this.y = y;
     }
@@ -108,13 +116,17 @@ public abstract class ChessPiece {
 		return this.COLOR;
 	}
 	
-	/**
-	 * Returns the (x,y) position of this chess piece
-	 * @return
-	 */
-	public int[] getPosition() {
-		return new int[] {x, y};
+	public String getName() {
+	  return this.NAME;
 	}
+	
+//	/**
+//	 * Returns the (x,y) position of this chess piece
+//	 * @return
+//	 */
+//	public int[] getPosition() {
+//		return new int[] {x, y};
+//	}
 	
 	public int getMaterialValue() {
 		return materialValue;

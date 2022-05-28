@@ -135,29 +135,30 @@ public class ChessGameTester {
   }
 
   public static void testChessGameDriver() {
+    Scanner s = new Scanner(System.in);
     ChessBoard b = new ChessBoard(new ChessPlayer("Ben"), new ChessPlayer("Maithilee"));
     System.out.println(b);
 
-    while (promptInput(b)) {
+    while (promptInput(b, s)) {
       System.out.println(b);
     }
+    
+    s.close();
   }
 
-  private static boolean promptInput(ChessBoard board) {
-    Scanner s = new Scanner(System.in);
+  private static boolean promptInput(ChessBoard board, Scanner s) {
     String stop;
     int x1;
     int y1;
     int x2;
     int y2;
-    String action;
 
     System.out.println("stop? ");
-    stop = s.next().toLowerCase();
+    stop = s.next();
     if (stop.equals("y") || stop.equals("yes")) {
       return false;
     }
-
+    
     System.out.print("x1: ");
     x1 = s.nextInt();
     System.out.print("y1: ");
@@ -166,24 +167,26 @@ public class ChessGameTester {
     x2 = s.nextInt();
     System.out.print("y2: ");
     y2 = s.nextInt();
-    System.out.print("action: ");
-    action = s.next().toLowerCase();
-
-    try {
-      if (action.equals("move")) {
-        board.getSquare(x1, y1).move(x2, y2);
+    
+    ChessPiece p = board.getSquare(x1, y1);
+    
+    if (p != null) {
+      if (p.canMove(x2, y2)) {
+        p.move(x2, y2);
       }
-      else if (action.equals("capture")) {
-        board.getSquare(x1, y1).capture(x2, y2);
+      else if (p.canCapture(x2, y2)) {
+        p.capture(x2, y2);
       }
       else {
-        System.out.println("invalid input");
+        System.out.println("\nillegal move");
       }
-      return true;
-    } catch (Exception e) {
-      System.out.println("illegal move");
-      return true;
     }
+    else {
+      System.out.println("\ninvalid input");
+    }
+    
+    return true;
+    
   }
 
 }

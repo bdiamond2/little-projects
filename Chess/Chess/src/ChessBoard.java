@@ -3,6 +3,7 @@ public class ChessBoard {
   private ChessPiece[][] board = new ChessPiece[8][8]; //[x][y]
   private ChessPlayer white;
   private ChessPlayer black;
+  protected ChessPiece lastActivePiece;
 
   public ChessBoard(ChessPlayer white, ChessPlayer black) {
     this.white = white;
@@ -52,7 +53,7 @@ public class ChessBoard {
           nextSquare = "__";
         }
         else {
-          nextSquare = board[x][y].toString();
+          nextSquare = board[x][y].toString() + "_";
         }
         result += "  " + nextSquare;
       }
@@ -84,14 +85,54 @@ public class ChessBoard {
   }
 
   /**
-   * Naively moves the piece at (x1,y1) to (x2,y2). CALLER MUST ENSURE THE MOVE/CAPTURE IS LEGAL. If there is a piece
-   * at the target square, this acts as a capture. If not, this acts as a move.
+   * Naively moves the piece at (x1,y1) to (x2,y2). CALLER MUST ENSURE THE MOVE/CAPTURE IS LEGAL.
    * @param x1 source square x-coord
    * @param y1 source square y-coord
    * @param x2 target square x-coord
    * @param y2 target square y-coord
    */
   public void moveOrCapture(int x1, int y1, int x2, int y2) {
+    verifyValidMoveOrCapture(x1, y1, x2, y2);
+
+    this.lastActivePiece = this.board[x1][y1];
+    this.board[x2][y2] = this.board[x1][y1]; // replace
+    this.board[x1][y1] = null; // leave null
+  }
+  
+  /**
+   * Special case of capturing where the capturing piece moves somewhere other than the square
+   * they attacked. Mainly used for en passant.
+   * @param x1 x of attacking piece
+   * @param y1 y of attacking piece
+   * @param x2 x of captured piece
+   * @param y2 y of captured piece
+   * @param x3 x of attacker's destination
+   * @param y3 y of attacker's destination
+   */
+  public void captureSpecial(int x1, int y1, int x2, int y2, int x3, int y3) {
+    verifyValidMoveOrCapture(x1, y1, x2, y2);
+    if (!isOnBoard(x3, y3)) {
+      throw new IllegalArgumentException("Invalid destination square");
+    }
+    
+    if (this.getSquare(x3, y3) != null) {
+      throw new IllegalArgumentException("The destination square can't be occupied");
+    }
+
+    this.lastActivePiece = this.board[x1][y1];
+    this.board[x3][y3] = this.board[x1][y1];
+    this.board[x1][y1] = null;
+    this.board[x2][y2] = null;
+  }
+  
+  /**
+   * Does basic checks before performing a move or capture
+   * @param x1 source square x-coord
+   * @param y1 source square y-coord
+   * @param x2 target square x-coord
+   * @param y2 target square y-coord
+   */
+  private void verifyValidMoveOrCapture(int x1, int y1, int x2, int y2) {
     if (!isOnBoard(x1, y1)) {
       throw new IllegalArgumentException("Invalid source square");
     }
@@ -101,8 +142,6 @@ public class ChessBoard {
     if (this.getSquare(x1, y1) == null) {
       throw new IllegalArgumentException("You can't move nothing");
     }
-
-    this.board[x2][y2] = this.board[x1][y1]; // replace
-    this.board[x1][y1] = null; // leave null
   }
+  
 }
