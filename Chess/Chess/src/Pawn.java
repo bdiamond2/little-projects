@@ -112,13 +112,13 @@ public class Pawn extends ChessPiece {
   @Override
   public boolean canCapture(int x, int y) {
     ChessPiece target = this.board.getSquare(x, y);
-    
-    if (!ChessBoard.isOnBoard(target.x, target.y)) {
+
+    // can't capture an empty square nor your own piece
+    if (target == null || target.getColor() == this.getColor()) {
       return false;
     }
     
-    // can't capture an empty square nor your own piece
-    if (target == null || target.getColor() == this.getColor()) {
+    if (!ChessBoard.isOnBoard(target.x, target.y)) {
       return false;
     }
     
@@ -141,15 +141,17 @@ public class Pawn extends ChessPiece {
   
   private boolean isEnPassant(int x, int y) {
     ChessPiece target = this.board.getSquare(x, y);
+    
+    if (target == null || target.getColor() == this.getColor()) {
+      return false;
+    }
+    
     // These first couple checks are covered in canCapture(), but I want isEnPassant() to be able to
     // stand alone without relying on canCapture()
     if (!ChessBoard.isOnBoard(target.x, target.y)) {
       return false;
     }
     
-    if (target == null || target.getColor() == this.getColor()) {
-      return false;
-    }
     if (target.x != this.x + 1 && target.x != this.x - 1) { // assumes we are on a valid square
       return false;
     }
