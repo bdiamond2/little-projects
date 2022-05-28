@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Pawn extends ChessPiece {
 
   private boolean hasMovedOrCaptured = false;
-  
+
   // 1 for white and -1 for black
   // this problem only exists for pawns, all other pieces' movements are color-agnostic
   private int direction;
@@ -88,7 +88,7 @@ public class Pawn extends ChessPiece {
   public void move(int x, int y) {
     super.move(x, y); // respects canMove()
     if (!this.hasMovedOrCaptured) { this.hasMovedOrCaptured = true; }
-    
+
     // pawn has reached the end of the board (i.e. going one more step would be off the board)
     if (!ChessBoard.isOnBoard(this.x, this.y + pawnForward(1))) {
       promote(); //TODO actually implement this
@@ -124,7 +124,7 @@ public class Pawn extends ChessPiece {
     }
     return result;
   }
-  
+
   /**
    * Takes x,y coordinates and returns whether the pawn could capture the piece there.
    * Remember, move != capture and this does NOT respect if the king is in check.
@@ -137,28 +137,28 @@ public class Pawn extends ChessPiece {
     if (target == null || target.getColor() == this.getColor()) {
       return false;
     }
-    
+
     if (!ChessBoard.isOnBoard(target.x, target.y)) {
       return false;
     }
-    
+
     if (isEnPassant(target.x, target.y)) {
       return true;
     }
-    
+
     // must be in an adjacent column
     if (target.x != this.x + 1 && target.x != this.x - 1) {
       return false;
     }
-    
+
     // must be in the next row
     if (target.y != this.y + pawnForward(1)) {
       return false;
     }
-    
+
     return true;
   }
-  
+
   /**
    * Checks whether this pawn could capture the pawn at x,y with en passant. This method can be
    * run standalone and does not rely on canCapture(), resulting in a couple trivial redundancies
@@ -179,20 +179,20 @@ public class Pawn extends ChessPiece {
     if (target == null || target.getColor() == this.getColor()) {
       return false;
     }
-    
+
     if (!ChessBoard.isOnBoard(target.x, target.y)) {
       return false;
     }
-    
+
     if (target.x != this.x + 1 && target.x != this.x - 1) { // assumes we are on a valid square
       return false;
     }
-    
+
     // can only en passant other pawns
     if (!(target instanceof Pawn)) {
       return false;
     }
-    
+
     // If the target's previous y is not 2 squares forward of (from my POV) from its current y
     // White pawn POV: The black pawn I'm attacking was previously at y+2, because my direction
     // is positive.
@@ -203,21 +203,21 @@ public class Pawn extends ChessPiece {
     if (target.prevY != target.y + pawnForward(2)) {
       return false;
     }
-    
+
     // can only do en passant immediately after the victim pawn's double jump
     if (this.board.lastActivePiece != target) {
       return false;
     }
-    
+
     // must be in an adjacent column
     // I know we already check this in canCapture but I don't like assuming part of the
     // logic has already been covered, beyond the basic "is on the board" verification
-    
+
     // have to be next to each other
     if (target.y != this.y) {
       return false;
     }
-    
+
     return true;
   }
 
@@ -228,7 +228,7 @@ public class Pawn extends ChessPiece {
   public void capture(int x, int y) {
     if (isEnPassant(x, y)) {
       this.board.captureSpecial(this.x, this.y, x, y, x, this.y + pawnForward(1));
-      
+
       // not utilizing the superclass so we have to update piece positions on our own
       this.prevX = this.x;
       this.prevY = this.y;

@@ -142,7 +142,7 @@ public class ChessGameTester {
     while (promptInput(b, s)) {
       System.out.println(b);
     }
-    
+
     s.close();
   }
 
@@ -158,7 +158,7 @@ public class ChessGameTester {
     if (stop.equals("y") || stop.equals("yes")) {
       return false;
     }
-    
+
     System.out.print("x1: ");
     x1 = s.nextInt();
     System.out.print("y1: ");
@@ -167,9 +167,9 @@ public class ChessGameTester {
     x2 = s.nextInt();
     System.out.print("y2: ");
     y2 = s.nextInt();
-    
+
     ChessPiece p = board.getSquare(x1, y1);
-    
+
     if (p != null) {
       if (p.canMove(x2, y2)) {
         p.move(x2, y2);
@@ -184,9 +184,9 @@ public class ChessGameTester {
     else {
       System.out.println("\ninvalid input");
     }
-    
+
     return true;
-    
+
   }
 
 }

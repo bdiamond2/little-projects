@@ -52,7 +52,7 @@ public class ChessBoard {
   public String toString() {
     String result = "\n";
     String nextSquare;
-    
+
     for (int y = 7; y >= 0; y--) {
       result += y;
       for (int x = 0; x <= 7; x++) {
@@ -66,7 +66,7 @@ public class ChessBoard {
       }
       result += "\n";
     }
-    
+
     result += "   ";
     for (int x = 0; x <= 7; x++) {
       result += x + "   ";
@@ -110,7 +110,7 @@ public class ChessBoard {
     this.board[x2][y2] = this.board[x1][y1]; // replace
     this.board[x1][y1] = null; // leave null
   }
-  
+
   /**
    * Special case of capturing where the capturing piece moves somewhere other than the square
    * they attacked. CALLER MUST ENSURE THE CAPTURE IS LEGAL. Only used for en passant.
@@ -126,7 +126,7 @@ public class ChessBoard {
     if (!isOnBoard(x3, y3)) {
       throw new IllegalArgumentException("Invalid destination square");
     }
-    
+
     if (this.getSquare(x3, y3) != null) {
       throw new IllegalArgumentException("The destination square can't be occupied");
     }
@@ -136,7 +136,7 @@ public class ChessBoard {
     this.board[x1][y1] = null;
     this.board[x2][y2] = null;
   }
-  
+
   /**
    * Does basic checks before performing a move or capture
    * @param x1 source square x-coord
@@ -155,5 +155,5 @@ public class ChessBoard {
       throw new IllegalArgumentException("You can't move nothing");
     }
   }
-  
+
 }
