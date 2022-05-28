@@ -1,13 +1,29 @@
 import java.util.ArrayList;
 
+/**
+ * Class modeling a pawn chess piece
+ * @author bdiamond2
+ *
+ */
 public class Pawn extends ChessPiece {
 
   private boolean hasMovedOrCaptured = false;
+  
+  // 1 for white and -1 for black
+  // this problem only exists for pawns, all other pieces' movements are color-agnostic
   private int direction;
 
+  /**
+   * Constructor for Pawn
+   * @param color Black or White
+   * @param board the board object that this piece is on
+   * @param x x-coordinate of the pawn's current position on the board
+   * @param y y-coordinate of the pawn's current position on the board
+   */
   public Pawn(ChessColor color, ChessBoard board, int x, int y) {
     super("Pawn", color, 1, board, x, y);
 
+    // assign direction based on piece color
     if (color == ChessColor.WHITE) {
       this.direction = 1;
     }
@@ -21,7 +37,8 @@ public class Pawn extends ChessPiece {
 
   /**
    * Transforms the pawn's row change in a move to respect its direction. Basically, 'y + 1' only
-   * works for white pawns and 'y - 1' only works for black pawns. y + pawnForward(1) works for both.
+   * works for white pawns and 'y - 1' only works for black pawns. y + pawnForward(1) works for both
+   * white and black pawns.
    * @param numRows
    * @return
    */
@@ -30,9 +47,8 @@ public class Pawn extends ChessPiece {
   }
 
   /**
-   * Takes an x/y coordinate and returns whether the pawn could move there.
-   * Remember, move != capture.
-   * Does not check for check.
+   * Takes x,y coordinates and returns whether the pawn could move there.
+   * Remember, move != capture and this does NOT respect if the king is in check.
    */
   @Override
   public boolean canMove(int x, int y) {
@@ -72,6 +88,11 @@ public class Pawn extends ChessPiece {
   public void move(int x, int y) {
     super.move(x, y); // respects canMove()
     if (!this.hasMovedOrCaptured) { this.hasMovedOrCaptured = true; }
+    
+    // pawn has reached the end of the board (i.e. going one more step would be off the board)
+    if (!ChessBoard.isOnBoard(this.x, this.y + pawnForward(1))) {
+      promote(); //TODO actually implement this
+    }
   }
 
   /**
@@ -105,9 +126,8 @@ public class Pawn extends ChessPiece {
   }
   
   /**
-   * Takes an x/y coordinate and returns whether the pawn could capture a piece there.
-   * Remember, move != capture.
-   * Does not check for check.
+   * Takes x,y coordinates and returns whether the pawn could capture the piece there.
+   * Remember, move != capture and this does NOT respect if the king is in check.
    */
   @Override
   public boolean canCapture(int x, int y) {
@@ -139,15 +159,27 @@ public class Pawn extends ChessPiece {
     return true;
   }
   
+  /**
+   * Checks whether this pawn could capture the pawn at x,y with en passant. This method can be
+   * run standalone and does not rely on canCapture(), resulting in a couple trivial redundancies
+   * but (in my opinion) a safer implementation.
+   * 
+   * This also differs from notational convention in chess, which would show the capture on the
+   * destination square rather than the square of the piece being captured. This method uses the
+   * x,y of the piece being captured.
+   * @param x x-coord of the piece to be captured
+   * @param y y-coord of the piece to be captured
+   * @return true if the piece at x,y could be captured with en passant, false if not
+   */
   private boolean isEnPassant(int x, int y) {
     ChessPiece target = this.board.getSquare(x, y);
-    
+
+    // These first couple checks are covered in canCapture(), but I want isEnPassant() to be able to
+    // stand alone without relying on canCapture()
     if (target == null || target.getColor() == this.getColor()) {
       return false;
     }
     
-    // These first couple checks are covered in canCapture(), but I want isEnPassant() to be able to
-    // stand alone without relying on canCapture()
     if (!ChessBoard.isOnBoard(target.x, target.y)) {
       return false;
     }
@@ -161,11 +193,13 @@ public class Pawn extends ChessPiece {
       return false;
     }
     
-    // if the target's previous y is not 2 squares forward of (from my POV) from its current y
+    // If the target's previous y is not 2 squares forward of (from my POV) from its current y
     // White pawn POV: The black pawn I'm attacking was previously at y+2, because my direction
     // is positive.
     // Black pawn POV: The white pawn I'm attacking was previously at y-2, because my direction
     // is negative.
+    // This also assumes that double jump has only happened on the first move, i.e. that canMove()
+    // has done its job.
     if (target.prevY != target.y + pawnForward(2)) {
       return false;
     }
@@ -188,26 +222,30 @@ public class Pawn extends ChessPiece {
   }
 
   /**
-   * Captures the piece at x,y. Calls the superclass method, which in turn calls
-   * this object's implementation of canMove().
+   * Captures the piece at x,y.
    */
   @Override
   public void capture(int x, int y) {
     if (isEnPassant(x, y)) {
       this.board.captureSpecial(this.x, this.y, x, y, x, this.y + pawnForward(1));
       
-      // captureSpecial() doesn't handle any of the position updates
+      // not utilizing the superclass so we have to update piece positions on our own
       this.prevX = this.x;
       this.prevY = this.y;
       this.x = x;
       this.y += pawnForward(1);
     }
     else {
-      super.capture(x, y);
+      super.capture(x, y); // this calls canCapture()
     }
+    // mark this pawn as moved to prevent future double jumping
     if (!this.hasMovedOrCaptured) { this.hasMovedOrCaptured = true; }
   }
 
+  /**
+   * Returns the unicode for a chess pawn in the correct color
+   * @return the unicode for a chess pawn in the correct color
+   */
   @Override
   public String toString() {
     //return ChessPiece.toStringCompact("P", getColor());
@@ -218,10 +256,15 @@ public class Pawn extends ChessPiece {
       return "\u265F";
     }
     else {
-      return this.getColor() + " " + this.getName();
+      // For now, enforce white/black color with exceptions. Maybe later we'll build in logic for
+      // weirder varieties of chess with other colors?
+      throw new IllegalStateException("Pawn must be white or black");
     }
   }
 
+  /**
+   * Promotes this pawn to something else...maybe this logic should reside in the game logic...
+   */
   private void promote() {
     // TODO
   }

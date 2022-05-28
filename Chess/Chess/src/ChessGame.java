@@ -2,7 +2,7 @@
 public class ChessGame {
 
 	public static void main(String[] args) {
-		ChessBoard b = new ChessBoard(new ChessPlayer("Ben"), new ChessPlayer("Maithilee"));
+		ChessBoard b = new ChessBoard(null);
 		System.out.println(b);
 	}
 

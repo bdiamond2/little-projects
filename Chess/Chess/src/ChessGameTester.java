@@ -12,7 +12,7 @@ public class ChessGameTester {
   }
 
   public static boolean testPawnMove() {
-    ChessBoard b = new ChessBoard(new ChessPlayer("Ben"), new ChessPlayer("Maithilee"));
+    ChessBoard b = new ChessBoard(null);
     System.out.println(b);
 
     // WHITE PAWNS
@@ -136,7 +136,7 @@ public class ChessGameTester {
 
   public static void testChessGameDriver() {
     Scanner s = new Scanner(System.in);
-    ChessBoard b = new ChessBoard(new ChessPlayer("Ben"), new ChessPlayer("Maithilee"));
+    ChessBoard b = new ChessBoard(null);
     System.out.println(b);
 
     while (promptInput(b, s)) {
