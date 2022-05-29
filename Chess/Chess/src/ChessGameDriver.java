@@ -27,7 +27,7 @@ public class ChessGameDriver {
     int[] tgt;
 
     while (true) {
-      System.out.println("\n" + g.getWhoseTurn() + "'s turn");
+      System.out.println("\n" + g.getWhoseTurn() + "'s turn (" + g.getWhoseTurn().getColor() + ")");
       System.out.println("Enter 'stop' at any time to quit the game.");
       System.out.println(g);
 
@@ -44,7 +44,7 @@ public class ChessGameDriver {
       }
 
       if (!g.nextTurn(src[0], src[1], tgt[0], tgt[1])) {
-        System.out.println("\nIllegal move\n");
+        System.out.println("\nILLEGAL MOVE");
       }
     }
 
