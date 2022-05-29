@@ -1,7 +1,16 @@
 import java.util.Scanner;
 
+/**
+ * Text-based interface for chess using the ChessGame class
+ * @author bdiamond2
+ *
+ */
 public class ChessGameDriver {
 
+  /**
+   * Main entry point
+   * @param args String args...I guess? Whatever those are.
+   */
   public static void main(String[] args) {
     Scanner s = new Scanner(System.in);
     String p1;
@@ -19,6 +28,7 @@ public class ChessGameDriver {
 
     while (true) {
       System.out.println("\n" + g.getWhoseTurn() + "'s turn");
+      System.out.println("Enter 'stop' at any time to quit the game.");
       System.out.println(g);
 
       System.out.print("Piece to move: ");
@@ -42,6 +52,12 @@ public class ChessGameDriver {
 
   }
 
+  /**
+   * Continually prompts the player for a move until it receives a valid legal move
+   * @param s scanner object
+   * @return Either a length-2 array of the board array coordinates (move to/from here) or
+   * null (abort game)
+   */
   private static int[] promptPlayerInput(Scanner s) {
     int[] result;
     
@@ -61,6 +77,13 @@ public class ChessGameDriver {
     }
   }
   
+  /**
+   * Collects one piece of input from the player, which should be a chess square in algebraic
+   * notation
+   * @param s scanner object
+   * @return Either a length-2 array of chess board coordinates (0-7,0-7), null (abort game), or
+   * or [-1] (invalid input, try again)
+   */
   private static int[] getSquareFromPlayer(Scanner s) {
     String input;
     int[] square;
