@@ -3,13 +3,22 @@ import java.util.Scanner;
 public class ChessGameDriver {
 
   public static void main(String[] args) {
-    ChessGame g = new ChessGame("Ben", "Maithilee");
     Scanner s = new Scanner(System.in);
+    String p1;
+    String p2;
+    
+    System.out.print("Player 1: ");
+    p1 = s.nextLine();
+    
+    System.out.print("Player 2: ");
+    p2 = s.nextLine();
+    
+    ChessGame g = new ChessGame(p1, p2);
     int[] src;
     int[] tgt;
 
     while (true) {
-      System.out.println(g.getWhoseTurn() + "'s turn.");
+      System.out.println("\n" + g.getWhoseTurn() + "'s turn");
       System.out.println(g);
 
       System.out.print("Piece to move: ");
@@ -23,44 +32,9 @@ public class ChessGameDriver {
       if (tgt == null) {
         break;
       }
-      
-//      while (true) {
-//        src = getPlayerInput(s);
-//        
-//        if (src == null) { // null means stop
-//          abortGame = true;
-//          break;
-//        }
-//
-//        if (src[0] == -1) { // -1 is invalid input
-//          System.out.println("Invalid input");
-//          continue;
-//        }
-//
-//        // if we got this far that means we got valid input
-//        break;
-//      }
-      
-      
-//      while (true) {
-//        tgt = getPlayerInput(s);
-//        
-//        if (tgt == null) { // null means stop
-//          abortGame = true;
-//          break;
-//        }
-//
-//        if (tgt[0] == -1) { // -1 is invalid input
-//          System.out.println("Invalid input");
-//          continue;
-//        }
-//
-//        // if we got this far that means we got valid input
-//        break;
-//      }
 
       if (!g.nextTurn(src[0], src[1], tgt[0], tgt[1])) {
-
+        System.out.println("\nIllegal move\n");
       }
     }
 
@@ -79,7 +53,7 @@ public class ChessGameDriver {
       }
       
       if (result[0] == -1) { // -1 is invalid input
-        System.out.println("Invalid input");
+        System.out.print("Invalid input, try again: ");
         continue;
       }
 
