@@ -46,7 +46,7 @@ public class ChessGameDriver {
     int[] result;
     
     while (true) {
-      result = getBoardSquare(s);
+      result = getSquareFromPlayer(s);
 
       if (result == null) {
         return null;
@@ -61,7 +61,7 @@ public class ChessGameDriver {
     }
   }
   
-  private static int[] getBoardSquare(Scanner s) {
+  private static int[] getSquareFromPlayer(Scanner s) {
     String input;
     int[] square;
 
