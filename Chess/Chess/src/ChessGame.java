@@ -11,21 +11,76 @@ public class ChessGame {
   ChessBoard board;
   ChessPlayer whoseTurn;
   
-  public static void main(String[] args) {
-    System.out.println(new ChessGame(new ChessPlayer("Ben", ChessColor.WHITE),
-        new ChessPlayer("Maithilee", ChessColor.BLACK)));
-    
-//    String input = "a1";
-//    int[] result;
-//    result = notationToCoordinates(input);
-//    System.out.println(input + ": " + result[0] + ", " + result[1]);
-  }
-  
-  public ChessGame(ChessPlayer white, ChessPlayer black) {
-    this.white = white;
-    this.black = black;
+  public ChessGame(String p1White, String p2Black) {
+    this.white = new ChessPlayer(p1White, ChessColor.WHITE);
+    this.black = new ChessPlayer(p2Black, ChessColor.BLACK);
     this.board = new ChessBoard(this);
     this.whoseTurn = white; // white goes first
+  }
+  
+  public ChessPlayer getWhoseTurn() {
+    return this.whoseTurn;
+  }
+  
+  /**
+   * Processes a new move/turn for the current player.
+   * @return true if the move was successful, false if not
+   */
+  public boolean nextTurn(int x1, int y1, int x2, int y2) {
+    ChessPiece pieceToMove = this.board.getSquare(x1, y1);
+    
+    // piece must exist and color of piece must match whose turn it is
+    if (pieceToMove == null || pieceToMove.getColor() != whoseTurn.getColor()) {
+      return false;
+    }
+    
+    //TODO account for the king being in check (ugh)
+    
+    if (!tryMove(x1, y1, x2, y2)) {
+      return false;
+    }
+    
+    toggleWhoseTurn();
+    return true;
+  }
+  
+  /**
+   * Attempts to move the piece at x1,y1 to x2,y2. Here, move and capture are used interchangeably.
+   * @param x1 x of piece to move
+   * @param y1 y of piece to move
+   * @param x2 x of square to move to
+   * @param y2 y of square to move to
+   * @return true if the piece successfully moved, false if not
+   */
+  private boolean tryMove(int x1, int y1, int x2, int y2) {
+    ChessPiece pieceToMove = this.board.getSquare(x1, y1);
+
+    // redundant, but we should do a null check wherever we're hoping it's not null
+    if (pieceToMove == null) { return false; }
+    
+    if (pieceToMove.canMove(x2, y2)) {
+      pieceToMove.move(x2, y2);
+    }
+    else if (pieceToMove.canCapture(x2, y2)) {
+      pieceToMove.capture(x2, y2);
+    }
+    else {
+      return false;
+    }
+    
+    return true;
+  }
+  
+  /**
+   * Switches whoseTurn from white to black and vice-versa. Defaults to white if it's no one's turn.
+   */
+  private void toggleWhoseTurn() {
+    if (this.whoseTurn == this.white) {
+      this.whoseTurn = this.black;
+    }
+    else {
+      this.whoseTurn = this.white;
+    }
   }
   
   @Override
@@ -39,7 +94,7 @@ public class ChessGame {
    * @param squareName
    * @return
    */
-  protected static int[] notationToCoordinates(String squareName) {
+  public static int[] notationToCoordinates(String squareName) {
     String file;
     String rank;
     String files = "ABCDEFGH";

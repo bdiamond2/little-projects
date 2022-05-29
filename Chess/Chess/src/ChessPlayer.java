@@ -1,22 +1,12 @@
-import java.util.ArrayList;
-
 public class ChessPlayer {
-
-  //	ArrayList<ChessPiece> material = new ArrayList<ChessPiece>();
+  private String name;
+  private ChessColor color;
   private boolean inCheck = false;
 
-  public ChessPlayer(String name, ChessColor side) {
-
+  public ChessPlayer(String name, ChessColor color) {
+    this.name = name;
+    this.color = color;
   }
-
-  public static void main(String[] args) {
-    // TODO Auto-generated method stub
-
-  }
-
-  //	public void addPiece(ChessPiece piece) {
-  //		material.add(piece);
-  //	}
 
   public int getTotalMaterialValue() {
     int total = 0;
@@ -27,9 +17,22 @@ public class ChessPlayer {
 
     return total;
   }
-  
+
+  public String getName() {
+    return this.name;
+  }
+
+  public ChessColor getColor() {
+    return this.color;
+  }
+
   public boolean getInCheck() {
     return this.inCheck;
+  }
+  
+  @Override
+  public String toString() {
+    return this.getName();
   }
 
 }
