@@ -3,8 +3,9 @@ import java.util.ArrayList;
 public class ChessPlayer {
 
   //	ArrayList<ChessPiece> material = new ArrayList<ChessPiece>();
+  private boolean inCheck = false;
 
-  public ChessPlayer(String name) {
+  public ChessPlayer(String name, ChessColor side) {
 
   }
 
@@ -25,6 +26,10 @@ public class ChessPlayer {
     //		}
 
     return total;
+  }
+  
+  public boolean getInCheck() {
+    return this.inCheck;
   }
 
 }

@@ -131,19 +131,20 @@ public class Pawn extends ChessPiece {
    */
   @Override
   public boolean canCapture(int x, int y) {
+    // en passant is weird so check for this first
+    if (isEnPassant(x, y)) {
+      return true;
+    }
+    
+    if (!ChessBoard.isOnBoard(x, y)) {
+      return false;
+    }
+
     ChessPiece target = this.board.getSquare(x, y);
 
     // can't capture an empty square nor your own piece
     if (target == null || target.getColor() == this.getColor()) {
       return false;
-    }
-
-    if (!ChessBoard.isOnBoard(target.x, target.y)) {
-      return false;
-    }
-
-    if (isEnPassant(target.x, target.y)) {
-      return true;
     }
 
     // must be in an adjacent column
@@ -160,19 +161,30 @@ public class Pawn extends ChessPiece {
   }
 
   /**
-   * Checks whether this pawn could capture the pawn at x,y with en passant. This method can be
-   * run standalone and does not rely on canCapture(), resulting in a couple trivial redundancies
-   * but (in my opinion) a safer implementation.
+   * Checks whether this pawn could capture the pawn at x,y-1 with en passant. The pawn being
+   * captured is at x,y-1 rather than x,y because chess use's the attacking pawn's destination
+   * rather than the attacked pawn's location. Hence, the input x,y should be the square that is
+   * BEHIND the attacked pawn - i.e. where this pawn will end up.
    * 
-   * This also differs from notational convention in chess, which would show the capture on the
-   * destination square rather than the square of the piece being captured. This method uses the
-   * x,y of the piece being captured.
-   * @param x x-coord of the piece to be captured
-   * @param y y-coord of the piece to be captured
-   * @return true if the piece at x,y could be captured with en passant, false if not
+   * This method can be run standalone and does not rely on canCapture(), resulting in a couple
+   * trivial redundancies but (in my opinion) a safer implementation.
+   * 
+   * @param x x-coord of the en passant-ing pawn's destination
+   * @param y y-coord of the en passant-ing pawn's destination
+   * @return true if the piece at x,y-1 could be captured with en passant, false if not
    */
   private boolean isEnPassant(int x, int y) {
-    ChessPiece target = this.board.getSquare(x, y);
+    if (!ChessBoard.isOnBoard(x, y) || !ChessBoard.isOnBoard(x, y - pawnForward(1))) {
+      return false;
+    }
+    // en passant destination must be clear
+    if (this.board.getSquare(x, y) != null) {
+      return false;
+    }
+
+    // en passant "attacks" the square that the attacked pawn skipped over, so the target is
+    // really at x,y-1 (from the attacker's POV)
+    ChessPiece target = this.board.getSquare(x, y - pawnForward(1));
 
     // These first couple checks are covered in canCapture(), but I want isEnPassant() to be able to
     // stand alone without relying on canCapture()
@@ -180,10 +192,7 @@ public class Pawn extends ChessPiece {
       return false;
     }
 
-    if (!ChessBoard.isOnBoard(target.x, target.y)) {
-      return false;
-    }
-
+    // must be in an adjacent column
     if (target.x != this.x + 1 && target.x != this.x - 1) { // assumes we are on a valid square
       return false;
     }
@@ -209,11 +218,7 @@ public class Pawn extends ChessPiece {
       return false;
     }
 
-    // must be in an adjacent column
-    // I know we already check this in canCapture but I don't like assuming part of the
-    // logic has already been covered, beyond the basic "is on the board" verification
-
-    // have to be next to each other
+    // pawns have to be next to each other
     if (target.y != this.y) {
       return false;
     }
@@ -227,7 +232,8 @@ public class Pawn extends ChessPiece {
   @Override
   public void capture(int x, int y) {
     if (isEnPassant(x, y)) {
-      this.board.captureSpecial(this.x, this.y, x, y, x, this.y + pawnForward(1));
+      // the attacked piece is at x,y-1 and the destination is x,y
+      this.board.captureSpecial(this.x, this.y, x, y - pawnForward(1), x, y);
 
       // not utilizing the superclass so we have to update piece positions on our own
       this.prevX = this.x;
