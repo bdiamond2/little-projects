@@ -52,9 +52,11 @@ public class ChessBoard {
   public String toString() {
     String result = "\n";
     String nextSquare;
+    String[] cols = new String[] {"A", "B", "C", "D", "E", "F", "G", "H"};
+    String[] rows = new String[] {"1", "2", "3", "4", "5", "6", "7", "8"};
 
     for (int y = 7; y >= 0; y--) {
-      result += y;
+      result += rows[y];
       for (int x = 0; x <= 7; x++) {
         if (board[x][y] == null) {
           nextSquare = "__";
@@ -69,7 +71,7 @@ public class ChessBoard {
 
     result += "   ";
     for (int x = 0; x <= 7; x++) {
-      result += x + "   ";
+      result += cols[x] + "   ";
     }
     result += "\n";
     return result;

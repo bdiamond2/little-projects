@@ -188,5 +188,13 @@ public class ChessGameTester {
     return true;
 
   }
+  
+  public static boolean testNotationToCoordinates() {
+    String input = "a1";
+    int[] result;
+    result = ChessGame.notationToCoordinates(input);
+    System.out.println(input + ": " + result[0] + ", " + result[1]);
+    return true;
+  }
 
 }
