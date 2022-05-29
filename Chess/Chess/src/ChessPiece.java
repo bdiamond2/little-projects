@@ -25,7 +25,7 @@ public abstract class ChessPiece {
    * Creates a new chess piece
    * @param name name of the piece (e.g. King, Queen, Bishop, etc...)
    * @param Black or White
-   * @param materialValue number indicating it's conventional material value
+   * @param materialValue number indicating its conventional material value
    * 	1-Pawn
    * 	3-Bishop
    * 	3-Knight
