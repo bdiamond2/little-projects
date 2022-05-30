@@ -10,33 +10,43 @@ public class ChessGame {
   ChessPlayer black;
   ChessBoard board;
   ChessPlayer whoseTurn;
+  ChessPlayer notWhoseTurn;
   
   public ChessGame(String p1White, String p2Black) {
     this.white = new ChessPlayer(p1White, ChessColor.WHITE);
     this.black = new ChessPlayer(p2Black, ChessColor.BLACK);
     this.board = new ChessBoard(this);
     this.whoseTurn = white; // white goes first
+    this.notWhoseTurn = black;
     
     giveMaterialToPlayers();
   }
   
   /**
-   * Loops through a JUST-INITIALIZED board and gives material to each player
+   * Loops through a JUST-INITIALIZED board and gives material to each player, also sets up each
+   * player's king reference
    */
   private void giveMaterialToPlayers() {
     int[] rows = new int[] {0, 1, 6, 7};
     ChessPiece c;
+    ChessPlayer player;
     
     for (int i : rows) {
       for (int j = 0; j < 8; j++) {
         c = this.board.getSquare(j, i);
-        if (c == null) { continue; }
+        if (c == null) { continue; } // from before I'd implemented all the pieces
         
-        if (i < 2) {
-          this.white.giveMaterial(c);
+        if (i < 2) { // crude but effective
+          player = this.white;
         }
         else {
-          this.black.giveMaterial(c);
+          player = this.black;
+        }
+        player.giveMaterial(c);
+        
+        // if we're on a king spot
+        if (j == 4 && (i == 0 || i == 7)) {
+          player.assignKing((King) c);
         }
       }
     }
@@ -52,6 +62,7 @@ public class ChessGame {
    */
   public boolean nextTurn(int x1, int y1, int x2, int y2) {
     ChessPiece pieceToMove = this.board.getSquare(x1, y1);
+    King king;
     
     // piece must exist and color of piece must match whose turn it is
     if (pieceToMove == null || pieceToMove.getColor() != whoseTurn.getColor()) {
@@ -59,6 +70,11 @@ public class ChessGame {
     }
     
     //TODO account for the king being in check (ugh)
+    king = this.whoseTurn.getKing();
+    if (this.board.isThreatened(king.x, king.y, this.notWhoseTurn.getColor())) {
+      this.whoseTurn.getKing().setIsInCheck(true);
+    }
+    // check is only removed immediately after moving
     
     if (!tryMove(x1, y1, x2, y2)) {
       return false;
@@ -101,9 +117,11 @@ public class ChessGame {
   private void toggleWhoseTurn() {
     if (this.whoseTurn == this.white) {
       this.whoseTurn = this.black;
+      this.notWhoseTurn = this.white;
     }
     else {
       this.whoseTurn = this.white;
+      this.notWhoseTurn = this.black;
     }
   }
   

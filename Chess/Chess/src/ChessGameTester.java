@@ -4,7 +4,9 @@ public class ChessGameTester {
 
   public static void main(String[] args) {
     System.out.println("runAllTests(): " + runAllTests());
-    testChessGameDriver();
+    //testChessGameDriver();
+    King k = new King(ChessColor.WHITE, null, 1, 1);
+    System.out.println(k.getClass().getSimpleName());
   }
 
   public static boolean runAllTests() {
