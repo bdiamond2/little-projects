@@ -11,8 +11,6 @@ public class ChessBoard {
   private ChessPiece[][] board = new ChessPiece[8][8];
   protected ChessPiece lastActivePiece;
   protected ChessGame game;
-  private King whiteKing;
-  private King blackKing;
 
   public ChessBoard(ChessGame game) {
     this.game = game;
@@ -41,9 +39,7 @@ public class ChessBoard {
      */
 
     board[4][0] = new King(ChessColor.WHITE, this, 4, 0);
-    this.whiteKing = (King) board[4][0];
     board[4][7] = new King(ChessColor.BLACK, this, 4, 7);
-    this.blackKing = (King) board[4][7];
 
     // pawns
     for (int i = 0; i < 8; i++) {
@@ -173,7 +169,7 @@ public class ChessBoard {
     // specific board object (because this might be a mirror board)
     for (int row = 0; row <= 7; row++) {
       for (int col = 0; col <= 7; col++) {
-        c = this.getSquare(row, col);
+        c = this.getSquare(col, row);
         // if the square is occupied, it's on the attacking side, and it can capture x,y
         if (c != null && c.getColor() == color && c.canCapture(x, y)) {
           return true;
@@ -184,16 +180,22 @@ public class ChessBoard {
     return false;
   }
 
+  /**
+   * Finds the king on this board of the given color
+   * @param color color of the king being searched for
+   * @return Reference to the king object with the given color if found
+   */
   public King getKing(ChessColor color) {
-    if (color == ChessColor.WHITE) {
-      return this.whiteKing;
+    ChessPiece c;
+    for (int x = 0; x <= 7; x++) {
+      for (int y = 0; y <= 7; y++) {
+        c = this.getSquare(x, y);
+        if (c instanceof King && c.getColor() == color) {
+          return (King) c;
+        }
+      }
     }
-    else if (color == ChessColor.BLACK) {
-      return this.blackKing;
-    }
-    else {
-      throw new IllegalStateException("King must be black or white");
-    }
+    throw new IllegalStateException("Each color must have a king present on the board");
   }
 
 }

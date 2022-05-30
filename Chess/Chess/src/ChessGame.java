@@ -74,13 +74,6 @@ public class ChessGame {
       return false;
     }
     
-    //TODO account for the king being in check (ugh)
-    king = this.board.getKing(this.whoseTurn.getColor());
-    if (this.board.isThreatened(king.x, king.y, this.notWhoseTurn.getColor())) {
-      king.setIsInCheck(true);
-    }
-    // check is only removed immediately after moving
-    
     if (!tryMove(x1, y1, x2, y2)) {
       return false;
     }
@@ -88,6 +81,12 @@ public class ChessGame {
     //TODO check for checkmate...in here...somewhere
     
     toggleWhoseTurn();
+    
+    // see if the next person is in check
+    king = this.board.getKing(this.whoseTurn.getColor());
+    if (this.board.isThreatened(king.x, king.y, this.notWhoseTurn.getColor())) {
+      king.setIsInCheck(true);
+    }
     return true;
   }
   
@@ -106,7 +105,6 @@ public class ChessGame {
 
     // redundant, but we should do a null check wherever we're hoping it's not null
     if (pieceToMove == null) { return false; }
-
     
     // try this move on the mirror board and see if we're in check afterwards
     King mirrorKing = this.mirror.getKing(this.whoseTurn.getColor());
@@ -123,14 +121,14 @@ public class ChessGame {
       return false; // if we can't move it on the mirror then don't even bother with the real board
     }
     
-    // if the king is still threatened after this move then it's a no-go
+    // if the king is in check after this move then it's a no-go
     if (this.mirror.isThreatened(mirrorKing.x, mirrorKing.y, this.notWhoseTurn.getColor())) {
       // undo the move, restore the mirror
       undoMirrorMove(x1, y1, x2, y2, mirrorLastActive);
       return false;
     }
     
-    // if we got this far we're not in check anymore
+    // if we got this far we're not in check anymore (or we never were)
     this.board.getKing(this.whoseTurn.getColor()).setIsInCheck(false);
     
     // do the move for real
