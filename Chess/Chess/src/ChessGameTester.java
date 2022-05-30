@@ -189,7 +189,7 @@ public class ChessGameTester {
     return true;
 
   }
-  
+
   public static boolean testNotationToCoordinates() {
     String input = "a1";
     int[] result;
@@ -197,13 +197,13 @@ public class ChessGameTester {
     System.out.println(input + ": " + result[0] + ", " + result[1]);
     return true;
   }
-  
+
   public static boolean testCheck() {
     System.out.println("\n\ntestCheck()...");
     ChessGame g = new ChessGame("Ben", "Maithilee");
     int[] src;
     int[] tgt;
-    
+
     System.out.println(g);
     String[] moves = new String[] {
         "e2:e4",
@@ -215,14 +215,14 @@ public class ChessGameTester {
         "e3:f4",
         "g7:g5"
     };
-    
+
     for (String m : moves) {
       src = ChessGame.notationToCoordinates(m.substring(0, 2));
       tgt = ChessGame.notationToCoordinates(m.substring(3, 5));
       g.nextTurn(src[0], src[1], tgt[0], tgt[1]);
     }
     System.out.println(g);
-    
+
     // make sure king is in check
     // state
     if (!g.board.getKing(ChessColor.WHITE).getIsInCheck()) {
@@ -232,12 +232,12 @@ public class ChessGameTester {
     if (!g.board.isThreatened(5, 3, ChessColor.BLACK)) {
       return false;
     }
-    
+
     // king can't capture a defended pawn
     if (g.nextTurn(5, 3, 6, 4)) {
       return false;
     }
-    
+
     // check lastActive on the board and the mirror after failed move
     if (g.board.lastActivePiece.x != 6 || g.board.lastActivePiece.y != 4) {
       return false;
@@ -251,7 +251,7 @@ public class ChessGameTester {
     if (g.mirror.getSquare(6, 4).prevX != 6 || g.mirror.getSquare(6, 4).prevY != 6) {
       return false;
     }
-    
+
     // can't capture another piece while in check
     if (g.nextTurn(4, 3, 5, 4)) {
       return false;
@@ -260,13 +260,13 @@ public class ChessGameTester {
     if (g.nextTurn(4, 3, 4, 4)) {
       return false;
     }
-    
+
     // king leaves check
     if (!g.nextTurn(5, 3, 5, 4)) {
       return false;
     }
     System.out.println(g);
-    
+
     return true;
   }
 

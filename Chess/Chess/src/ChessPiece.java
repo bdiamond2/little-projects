@@ -125,9 +125,9 @@ public abstract class ChessPiece {
     if (!this.canCapture(xDest, yDest)) { // canCapture() uses the destination, not the victim
       throw new IllegalArgumentException("Not a valid capture");
     }
-    
+
     this.board.getSquare(xCap, yCap).markAsCaptured();
-    
+
     this.board.capture(this.x, this.y, xDest, yDest, xCap, yCap);
     this.prevX = this.x;
     this.prevY = this.y;
@@ -155,11 +155,11 @@ public abstract class ChessPiece {
     return isCaptured;
   }
 
-  /**
-   * Returns all the possible positions this piece could move
-   * @return ArrayList of [x,y] positions where this piece could move, null if there are no possible positions
-   */
-  public abstract ArrayList<Integer[]> getPossibleMoves();
+  //  /**
+  //   * Returns all the possible positions this piece could move
+  //   * @return ArrayList of [x,y] positions where this piece could move, null if there are no possible positions
+  //   */
+  //  public abstract ArrayList<Integer[]> getPossibleMoves();
 
   /**
    * Returns the color of this chess piece

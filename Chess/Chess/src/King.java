@@ -113,7 +113,7 @@ public class King extends ChessPiece {
     if (target == null) {
       return false;
     }
-    
+
     // can't capture your own piece
     if (target.getColor() == this.getColor()) {
       return false;
@@ -121,17 +121,28 @@ public class King extends ChessPiece {
 
     return isAdjacentSquare(x, y);
   }
-  
+
   @Override
   public void capture(int x, int y) {
     super.capture(x, y);
     if (!this.hasMovedOrCaptured) { this.hasMovedOrCaptured = true; }
   }
 
-  @Override
-  public ArrayList<Integer[]> getPossibleMoves() {
-    // TODO Auto-generated method stub
-    return null;
+  /**
+   * Returns the possible moves or captures for this king (DOES NOT ACCOUNT FOR CHECK)
+   * @return ArrayList of x,y possible moves
+   */
+  public ArrayList<Integer[]> getPotentialMovesOrCaptures() {
+    ArrayList<Integer[]> moves = new ArrayList<Integer[]>();
+    for (int x = this.x - 1; x < this.x + 2; x++) {
+      for (int y = this.y - 1; y < this.y + 2; y++) {
+        if (this.canMove(x, y) || this.canCapture(x, y)) {
+          moves.add(new Integer[] {x, y});
+        }
+      }
+    }
+
+    return moves;
   }
 
   public boolean getIsInCheck() {

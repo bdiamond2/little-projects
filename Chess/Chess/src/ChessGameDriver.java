@@ -15,13 +15,13 @@ public class ChessGameDriver {
     Scanner s = new Scanner(System.in);
     String p1;
     String p2;
-    
+
     System.out.print("Player 1: ");
     p1 = s.nextLine();
-    
+
     System.out.print("Player 2: ");
     p2 = s.nextLine();
-    
+
     ChessGame g = new ChessGame(p1, p2);
     int[] src;
     int[] tgt;
@@ -63,14 +63,14 @@ public class ChessGameDriver {
    */
   private static int[] promptPlayerInput(Scanner s) {
     int[] result;
-    
+
     while (true) {
       result = getSquareFromPlayer(s);
 
       if (result == null) {
         return null;
       }
-      
+
       if (result[0] == -1) { // -1 is invalid input
         System.out.print("Invalid input, try again: ");
         continue;
@@ -79,7 +79,7 @@ public class ChessGameDriver {
       return result;
     }
   }
-  
+
   /**
    * Collects one piece of input from the player, which should be a chess square in algebraic
    * notation
@@ -104,7 +104,7 @@ public class ChessGameDriver {
 
     return square;
   }
-  
-  
+
+
 
 }
