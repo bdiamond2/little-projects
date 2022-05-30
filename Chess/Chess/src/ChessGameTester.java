@@ -198,5 +198,10 @@ public class ChessGameTester {
     System.out.println(input + ": " + result[0] + ", " + result[1]);
     return true;
   }
+  
+  public static boolean testCheck() {
+    ChessGame g = new ChessGame("Ben", "Maithilee");
+    return false;
+  }
 
 }

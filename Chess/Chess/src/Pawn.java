@@ -71,6 +71,7 @@ public class Pawn extends ChessPiece {
     if (this.x != x) {
       return false;
     }
+    
     // can't be a piece already there
     if (this.board.getSquare(x, y) != null) {
       return false;

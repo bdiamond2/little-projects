@@ -84,7 +84,7 @@ public abstract class ChessPiece {
    */
   public void move(int x, int y) {
     if (!this.canMove(x, y)) {
-      throw new IllegalArgumentException("Not a valid move");
+      throw new IllegalArgumentException("Illegal move");
     }
 
     this.board.move(this.x, this.y, x, y);
