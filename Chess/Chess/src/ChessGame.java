@@ -105,20 +105,32 @@ public class ChessGame {
 
     // redundant, but we should do a null check wherever we're hoping it's not null
     if (pieceToMove == null) { return false; }
-    
-    // try this move on the mirror board and see if we're in check afterwards
-    
 
     
-    if (pieceToMove.canMove(x2, y2)) {
+    // try this move on the mirror board and see if we're in check afterwards
+    King mirrorKing = this.mirror.getKing(this.whoseTurn.getColor());
+    if (mirrorPieceToMove.canMove(x2, y2)) {
       mirrorPieceToMove.move(x2, y2);
-      
-      
-      
+    }
+    else if (mirrorPieceToMove.canCapture(x2, y2)) {
+      mirrorPieceToMove.capture(x2, y2);
+    }
+    // if the king is still threatened after this move then it's a no-go
+    if (this.mirror.isThreatened(mirrorKing.x, mirrorKing.y, this.notWhoseTurn.getColor())) {
+      // undo the move, restore the mirror
+      this.mirror.setSquare(x1, y1, this.board.getSquare(x1, y1).getDeepCopy(this.mirror));
+      this.mirror.setSquare(x2, y2, this.board.getSquare(x2, y2).getDeepCopy(this.mirror));
+      return false;
+    }
+    
+    // if we got this far we're not in check anymore
+    this.board.getKing(this.whoseTurn.getColor()).setIsInCheck(false);
+    
+    // do the move for real
+    if (pieceToMove.canMove(x2, y2)) {
       pieceToMove.move(x2, y2);
     }
     else if (pieceToMove.canCapture(x2, y2)) {
-      mirrorPieceToMove.capture(x2, y2);
       pieceToMove.capture(x2, y2);
     }
     else {

@@ -93,6 +93,10 @@ public class ChessBoard {
   public ChessPiece getSquare(int x, int y) {
     return this.board[x][y];
   }
+  
+  public void setSquare(int x, int y, ChessPiece piece) {
+    this.board[x][y] = piece;
+  }
 
   /**
    * Returns whether the given x,y coordinates are valid for a standard chess board.
