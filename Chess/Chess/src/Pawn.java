@@ -243,14 +243,15 @@ public class Pawn extends ChessPiece {
   @Override
   public void capture(int x, int y) {
     if (isEnPassant(x, y)) {
-      // the attacked piece is at x,y-1 and the destination is x,y
-      this.board.captureSpecial(this.x, this.y, x, y - pawnForward(1), x, y);
-
-      // not utilizing the superclass so we have to update piece positions on our own
-      this.prevX = this.x;
-      this.prevY = this.y;
-      this.x = x;
-      this.y += pawnForward(1);
+//      // the attacked piece is at x,y-1 and the destination is x,y
+//      this.board.captureSpecial(this.x, this.y, x, y - pawnForward(1), x, y);
+//
+//      // not utilizing the superclass so we have to update piece positions on our own
+//      this.prevX = this.x;
+//      this.prevY = this.y;
+//      this.x = x;
+//      this.y += pawnForward(1);
+      super.capture(x, y, x, y - pawnForward(1));
     }
     else {
       super.capture(x, y); // this calls canCapture()

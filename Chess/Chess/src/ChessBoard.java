@@ -39,7 +39,7 @@ public class ChessBoard {
 		board[6][7] = new Knight(ChessColor.BLACK, this, 6, 7);
 		board[7][7] = new Rook(ChessColor.BLACK, this, 7, 7);
      */
-    
+
     board[4][0] = new King(ChessColor.WHITE, this, 4, 0);
     this.whiteKing = (King) board[4][0];
     board[4][7] = new King(ChessColor.BLACK, this, 4, 7);
@@ -106,57 +106,34 @@ public class ChessBoard {
   }
 
   /**
-   * Naively moves the piece at (x1,y1) to (x2,y2). If there is a piece at the target space,
-   * this acts as a capture. CALLER MUST ENSURE THE MOVE/CAPTURE IS LEGAL.
+   * Naively moves the piece at (x1,y1) to (x2,y2). CALLER MUST ENSURE THE MOVE/CAPTURE IS LEGAL.
    * @param x1 source square x-coord
    * @param y1 source square y-coord
    * @param x2 target square x-coord
    * @param y2 target square y-coord
    */
-  public void moveOrCapture(int x1, int y1, int x2, int y2, int x3, int y3) {
+  public void move(int x1, int y1, int x2, int y2) {
     verifyValidMoveOrCapture(x1, y1, x2, y2);
-    
-    // if this is a capture, mark the piece as captured
-    ChessPiece target = this.board[x2][y2];
-    if (target != null) {
-      target.markAsCaptured();
-    }
 
     this.lastActivePiece = this.board[x1][y1];
     this.board[x2][y2] = this.board[x1][y1]; // replace
     this.board[x1][y1] = null; // leave null
   }
 
-  /**
-   * Special case of capturing where the capturing piece moves somewhere other than the square
-   * they attacked. CALLER MUST ENSURE THE CAPTURE IS LEGAL. Only used for en passant.
-   * @param x1 x of attacking piece
-   * @param y1 y of attacking piece
-   * @param x2 x of captured piece
-   * @param y2 y of captured piece
-   * @param x3 x of attacker's destination
-   * @param y3 y of attacker's destination
-   */
-  public void captureSpecial(int x1, int y1, int x2, int y2, int x3, int y3) {
-    verifyValidMoveOrCapture(x1, y1, x2, y2);
-    if (!isOnBoard(x3, y3)) {
+  public void capture(int x1, int y1, int xDest, int yDest, int xCap, int yCap) {
+    verifyValidMoveOrCapture(x1, y1, xDest, yDest);
+    if (!isOnBoard(xCap, yCap)) {
       throw new IllegalArgumentException("Invalid destination square");
     }
 
-    if (this.getSquare(x3, y3) != null) {
-      throw new IllegalArgumentException("The destination square can't be occupied");
-    }
-    
-    if (this.getSquare(x2, y2) == null) {
-      // ChessPiece logic should also check for this
-      throw new IllegalArgumentException("Square to capture can't be empty");
+    if (this.getSquare(xCap, yCap) == null) {
+      throw new IllegalArgumentException("Can't capture a blank square");
     }
 
-    this.getSquare(x2, y2).markAsCaptured();
-    this.lastActivePiece = this.board[x1][y1];
-    this.board[x3][y3] = this.board[x1][y1];
-    this.board[x1][y1] = null;
-    this.board[x2][y2] = null;
+    this.lastActivePiece = this.board[x1][y1]; // update last active piece
+    this.board[xCap][yCap] = null; // clear out the captured square (do this first)
+    this.board[xDest][yDest] = this.board[x1][y1]; // move piece from x1,y1 to x2,y2
+    this.board[x1][y1] = null; // leave the original square empty
   }
 
   /**
@@ -174,10 +151,10 @@ public class ChessBoard {
       throw new IllegalArgumentException("Invalid target square");
     }
     if (this.getSquare(x1, y1) == null) {
-      throw new IllegalArgumentException("You can't move nothing");
+      throw new IllegalArgumentException("The square being moved from can't be empty");
     }
   }
-  
+
   /**
    * Checks if a given square is threatened by any piece from the specified side.
    * NOTE: Pinned pieces count as valid threats (because they can still check the king)!
@@ -188,30 +165,6 @@ public class ChessBoard {
    */
   public boolean isThreatened(int x, int y, ChessColor color) {
     ChessPiece c;
-//    ChessPlayer player;
-//    ArrayList<ChessPiece> material;
-//    
-//    // I don't love the board referencing the players, but it's more efficient than looping
-//    // through every single board square gathering up the pieces
-//    if (color == ChessColor.WHITE) {
-//      player = this.game.white;
-//    }
-//    else if (color == ChessColor.BLACK) {
-//      player = this.game.black;
-//    }
-//    else {
-//      throw new IllegalStateException("Piece must be black or white");
-//    }
-//    
-//    // let this throw a NullPointerException if the player is null, that'd be bad
-//    material = player.getMaterial();
-//    
-//    for (ChessPiece c : material) {
-//      // c shouldn't be null but it's not bad enough to crash the game over
-//      if (c != null && !c.getIsCaptured() && c.canCapture(x, y)) {
-//        return true;
-//      }
-//    }
     // don't use the players' material lists because we need to keep the focus on this
     // specific board object (because this might be a mirror board)
     for (int row = 0; row <= 7; row++) {
@@ -223,10 +176,10 @@ public class ChessBoard {
         }
       }
     }
-    
+
     return false;
   }
-  
+
   public King getKing(ChessColor color) {
     if (color == ChessColor.WHITE) {
       return this.whiteKing;

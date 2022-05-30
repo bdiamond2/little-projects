@@ -20,13 +20,13 @@ public abstract class ChessPiece {
 
   private int materialValue = -1; // default value
   protected ChessBoard board; // chess board that this piece is on
-  
+
   /**
    * Returns a deep copy of this ChessPiece on a different board
    * @return a deep copy of this chess piece
    */
   public abstract ChessPiece getDeepCopy(ChessBoard newBoard);
-  
+
   protected static void copyBaseAttributes(ChessPiece source, ChessPiece target) {
     // some of this will be redundant
     target.isCaptured = source.isCaptured;
@@ -36,7 +36,7 @@ public abstract class ChessPiece {
     target.prevY = source.prevY;
     target.materialValue = source.materialValue;
   }
-  
+
   /**
    * Creates a new chess piece
    * @param name name of the piece (e.g. King, Queen, Bishop, etc...)
@@ -87,7 +87,7 @@ public abstract class ChessPiece {
       throw new IllegalArgumentException("Not a valid move");
     }
 
-    this.board.moveOrCapture(this.x, this.y, x, y);
+    this.board.move(this.x, this.y, x, y);
 
     // update positions
     this.prevX = this.x;
@@ -111,17 +111,30 @@ public abstract class ChessPiece {
    * @throws IllegalArgumentException if this capture is invalid
    */
   public void capture(int x, int y) {
-    if (!this.canCapture(x, y)) {
+    this.capture(x, y, x, y);
+  }
+
+  /**
+   * Captures the piece at xCap,yCap and moves the capturing piece to xDest,yDest
+   * @param xDest
+   * @param yDest
+   * @param xCap
+   * @param yCap
+   */
+  public void capture(int xDest, int yDest, int xCap, int yCap) {
+    if (!this.canCapture(xDest, yDest)) { // canCapture() uses the destination, not the victim
       throw new IllegalArgumentException("Not a valid capture");
     }
-
-    this.board.moveOrCapture(this.x, this.y, x, y);
+    
+    this.board.getSquare(xCap, yCap).markAsCaptured();
+    
+    this.board.capture(this.x, this.y, xDest, yDest, xCap, yCap);
     this.prevX = this.x;
     this.prevY = this.y;
-    this.x = x;
-    this.y = y;
+    this.x = xDest;
+    this.y = yDest;
   }
-  
+
   /**
    * Sets isCaptured to true
    * @param isCaptured
