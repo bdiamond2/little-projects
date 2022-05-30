@@ -53,7 +53,7 @@ public class Pawn extends ChessPiece {
    * @param numRows
    * @return
    */
-  private int pawnForward(int numRows) {
+  public int pawnForward(int numRows) {
     return numRows * direction;
   }
 
@@ -184,7 +184,7 @@ public class Pawn extends ChessPiece {
    * @param y y-coord of the en passant-ing pawn's destination
    * @return true if the piece at x,y-1 could be captured with en passant, false if not
    */
-  private boolean isEnPassant(int x, int y) {
+  public boolean isEnPassant(int x, int y) {
     if (!ChessBoard.isOnBoard(x, y) || !ChessBoard.isOnBoard(x, y - pawnForward(1))) {
       return false;
     }
