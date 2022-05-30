@@ -28,8 +28,11 @@ public class ChessGameDriver {
 
     while (true) {
       System.out.println("\n" + g.getWhoseTurn() + "'s turn (" + g.getWhoseTurn().getColor() + ")");
-      System.out.println("Enter 'stop' at any time to quit the game.");
+      if (g.board.getKing(g.getWhoseTurn().getColor()).getIsInCheck()) {
+        System.out.println(g.getWhoseTurn() + " is in check.");
+      }
       System.out.println(g);
+      System.out.println("Enter 'stop' at any time to quit the game.");
 
       System.out.print("Piece to move: ");
       src = promptPlayerInput(s);
