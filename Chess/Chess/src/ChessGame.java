@@ -12,12 +12,17 @@ public class ChessGame {
   ChessPlayer whoseTurn;
   ChessPlayer notWhoseTurn;
   
+  // deep copy of the real board used for testing the legality of moves with respect to check
+  ChessBoard mirror;
+  
   public ChessGame(String p1White, String p2Black) {
     this.white = new ChessPlayer(p1White, ChessColor.WHITE);
     this.black = new ChessPlayer(p2Black, ChessColor.BLACK);
     this.board = new ChessBoard(this);
     this.whoseTurn = white; // white goes first
     this.notWhoseTurn = black;
+    
+    this.mirror = new ChessBoard(this);
     
     giveMaterialToPlayers();
   }

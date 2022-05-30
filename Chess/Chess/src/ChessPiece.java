@@ -20,7 +20,23 @@ public abstract class ChessPiece {
 
   private int materialValue = -1; // default value
   protected ChessBoard board; // chess board that this piece is on
-
+  
+  /**
+   * Returns a deep copy of this ChessPiece on a different board
+   * @return a deep copy of this chess piece
+   */
+  public abstract ChessPiece getDeepCopy(ChessBoard newBoard);
+  
+  protected static void copyBaseAttributes(ChessPiece source, ChessPiece target) {
+    // some of this will be redundant
+    target.isCaptured = source.isCaptured;
+    target.x = source.x;
+    target.y = source.y;
+    target.prevX = source.prevX;
+    target.prevY = source.prevY;
+    target.materialValue = source.materialValue;
+  }
+  
   /**
    * Creates a new chess piece
    * @param name name of the piece (e.g. King, Queen, Bishop, etc...)
@@ -164,5 +180,6 @@ public abstract class ChessPiece {
   public String toString() {
     return this.COLOR + " " + this.NAME;
   }
+
 
 }

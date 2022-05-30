@@ -13,6 +13,17 @@ public class Pawn extends ChessPiece {
   // this problem only exists for pawns, all other pieces' movements are color-agnostic
   private int direction;
 
+  @Override
+  public Pawn getDeepCopy(ChessBoard newBoard) {
+    Pawn deepCopy = new Pawn(this.getColor(), newBoard, this.x, this.y);
+    ChessPiece.copyBaseAttributes(this, deepCopy);
+    
+    deepCopy.hasMovedOrCaptured = this.hasMovedOrCaptured;
+    deepCopy.direction = this.direction;
+    
+    return deepCopy;
+  }
+  
   /**
    * Constructor for Pawn
    * @param color Black or White
@@ -148,12 +159,12 @@ public class Pawn extends ChessPiece {
     }
 
     // must be in an adjacent column
-    if (target.x != this.x + 1 && target.x != this.x - 1) {
+    if (x != this.x + 1 && x != this.x - 1) {
       return false;
     }
 
     // must be in the next row
-    if (target.y != this.y + pawnForward(1)) {
+    if (y != this.y + pawnForward(1)) {
       return false;
     }
 
@@ -193,7 +204,7 @@ public class Pawn extends ChessPiece {
     }
 
     // must be in an adjacent column
-    if (target.x != this.x + 1 && target.x != this.x - 1) { // assumes we are on a valid square
+    if (x != this.x + 1 && x != this.x - 1) { // assumes we are on a valid square
       return false;
     }
 

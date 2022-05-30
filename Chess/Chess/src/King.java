@@ -5,6 +5,19 @@ public class King extends ChessPiece {
   private boolean hasMovedOrCaptured = false;
   private boolean isInCheck = false;
 
+  /**
+   * Returns a deep copy of this King object with all the same states on a different board
+   */
+  @Override
+  public King getDeepCopy(ChessBoard newBoard) {
+    King deepCopy = new King(this.getColor(), newBoard, this.x, this.y);
+    ChessPiece.copyBaseAttributes(this, deepCopy);
+    deepCopy.hasMovedOrCaptured = this.hasMovedOrCaptured;
+    deepCopy.isInCheck = this.isInCheck;
+    
+    return deepCopy;
+  }
+  
   public King(ChessColor color, ChessBoard board, int x, int y) {
     super("King", color, 0, board, x, y);
   }
