@@ -261,11 +261,43 @@ public class ChessGameTester {
       return false;
     }
 
+    if (!g.board.getKing(ChessColor.WHITE).getIsInCheck()) {
+      return false;
+    }
+    if (g.isGameOver()) {
+      return false;
+    }
+    
     // king leaves check
     if (!g.nextTurn(5, 3, 5, 4)) {
       return false;
     }
     System.out.println(g);
+    
+    // test checkmate
+    g.nextTurn(4, 7, 5, 6);
+    g.nextTurn(5, 1, 5, 3);
+    g.nextTurn(0, 6, 0, 5);
+    g.nextTurn(6, 1, 6, 3);
+    g.nextTurn(3, 6, 3, 5);
+    g.nextTurn(0, 1, 0, 2);
+    g.nextTurn(4, 6, 4, 5); // checkmate
+    System.out.println(g);
+    
+    if (!g.isGameOver()) {
+      return false;
+    }
+    if (g.getWinner() != g.black) {
+      return false;
+    }
+    try {
+      g.nextTurn(0, 2, 0, 3);
+      return false;
+    } catch (IllegalStateException e) {
+      // good catch
+    } catch (Exception e) {
+      return false;
+    }
 
     return true;
   }
