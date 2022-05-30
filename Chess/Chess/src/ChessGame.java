@@ -108,24 +108,48 @@ public class ChessGame {
 
   private void checkForCheckmate() {
     King nextKing = this.board.getKing(this.whoseTurn.getColor());
-    ArrayList<Integer[]> potentialKingMoves = nextKing.getPotentialMovesOrCaptures();
+    ArrayList<Integer[]> possibleMoves;
     boolean isCheckmate = true;
     ChessPiece tempLastActive;
+    ChessPiece c;
 
-    // smothered mate
-    if (potentialKingMoves.size() == 0) {
-      this.winner = this.notWhoseTurn;
-    }
+    // loop through all this player's pieces and see if any of them can move in a way that
+    // ends check
+    for (int x = 0; x <= 7; x++) {
+      for (int y = 0; y <= 7; y++) {
+        c = this.board.getSquare(x, y);
 
-    // look for any potential pieces
-    tempLastActive = this.mirror.lastActivePiece;
-    for (Integer[] move : potentialKingMoves) {
-      if (this.tryMoveOnMirror(nextKing.x, nextKing.y, move[0], move[1])) {
-        isCheckmate = false;
-        this.undoMirrorMove(nextKing.x, nextKing.y, move[0], move[1], tempLastActive);
-        break;
+        // found one of our pieces
+        if (c != null && c.getColor() == this.whoseTurn.getColor()) {
+          possibleMoves = c.getPossibleMovesOrCaptures();
+
+          // loop through every possible (really potential) move
+          for (Integer[] move : possibleMoves) {
+            tempLastActive = this.mirror.lastActivePiece; // preserve the last active piece
+            if (this.tryMoveOnMirror(c.x, c.y, move[0], move[1])) {
+              isCheckmate = false;
+              this.undoMirrorMove(nextKing.x, nextKing.y, move[0], move[1], tempLastActive);
+              break;
+            }
+          }
+        }
       }
     }
+    //    
+    //    // smothered mate
+    //    if (potentialKingMoves.size() == 0) {
+    //      this.winner = this.notWhoseTurn;
+    //    }
+    //
+    //    // look for any potential pieces
+    //    tempLastActive = this.mirror.lastActivePiece;
+    //    for (Integer[] move : potentialKingMoves) {
+    //      if (this.tryMoveOnMirror(nextKing.x, nextKing.y, move[0], move[1])) {
+    //        isCheckmate = false;
+    //        this.undoMirrorMove(nextKing.x, nextKing.y, move[0], move[1], tempLastActive);
+    //        break;
+    //      }
+    //    }
     if (isCheckmate) {
       this.winner = this.notWhoseTurn;
     }

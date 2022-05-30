@@ -132,7 +132,7 @@ public class King extends ChessPiece {
    * Returns the possible moves or captures for this king (DOES NOT ACCOUNT FOR CHECK)
    * @return ArrayList of x,y possible moves
    */
-  public ArrayList<Integer[]> getPotentialMovesOrCaptures() {
+  public ArrayList<Integer[]> getPossibleMovesOrCaptures() {
     ArrayList<Integer[]> moves = new ArrayList<Integer[]>();
     for (int x = this.x - 1; x < this.x + 2; x++) {
       for (int y = this.y - 1; y < this.y + 2; y++) {

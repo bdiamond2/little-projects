@@ -8,7 +8,8 @@ public class ChessGameTester {
 
   public static boolean runAllTests() {
     return testPawnMove() &&
-        testCheck();
+        testCheck() &&
+        testCheckmate();
   }
 
   public static boolean testPawnMove() {
@@ -267,13 +268,13 @@ public class ChessGameTester {
     if (g.isGameOver()) {
       return false;
     }
-    
+
     // king leaves check
     if (!g.nextTurn(5, 3, 5, 4)) {
       return false;
     }
     System.out.println(g);
-    
+
     // test checkmate
     g.nextTurn(4, 7, 5, 6);
     g.nextTurn(5, 1, 5, 3);
@@ -283,7 +284,7 @@ public class ChessGameTester {
     g.nextTurn(0, 1, 0, 2);
     g.nextTurn(4, 6, 4, 5); // checkmate
     System.out.println(g);
-    
+
     if (!g.isGameOver()) {
       return false;
     }
@@ -299,6 +300,41 @@ public class ChessGameTester {
       return false;
     }
 
+    return true;
+  }
+
+  public static boolean testCheckmate() {
+    System.out.println("\n\ntestCheckmate()...");
+    ChessGame g = new ChessGame("Ben", "Maithilee");
+    int[] src;
+    int[] tgt;
+    String nextMove;
+
+    String[] moves = new String[] {
+        "e2:e3",
+        "e7:e5",
+        "e1:e2",
+        "f7:f6",
+        "e2:f3",
+        "d7:d6",
+        "f3:e4",
+        "g7:g6",
+        "f2:f3",
+        "c7:c6",
+        "d2:d3"
+    };
+    for (String m : moves) {
+      src = ChessGame.notationToCoordinates(m.substring(0, 2));
+      tgt = ChessGame.notationToCoordinates(m.substring(3, 5));
+      g.nextTurn(src[0], src[1], tgt[0], tgt[1]);
+    }
+
+    if (g.isGameOver()) {
+      return false;
+    }
+
+    
+    System.out.println(g);
     return true;
   }
 

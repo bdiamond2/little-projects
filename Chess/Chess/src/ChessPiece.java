@@ -155,11 +155,12 @@ public abstract class ChessPiece {
     return isCaptured;
   }
 
-  //  /**
-  //   * Returns all the possible positions this piece could move
-  //   * @return ArrayList of [x,y] positions where this piece could move, null if there are no possible positions
-  //   */
-  //  public abstract ArrayList<Integer[]> getPossibleMoves();
+    /**
+     * Returns all the possible positions this piece could move
+     * @return ArrayList of [x,y] positions where this piece could move,null if there are no
+     * possible positions
+     */
+    public abstract ArrayList<Integer[]> getPossibleMovesOrCaptures();
 
   /**
    * Returns the color of this chess piece
