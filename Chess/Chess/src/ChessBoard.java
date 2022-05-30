@@ -99,7 +99,8 @@ public class ChessBoard {
   }
 
   /**
-   * Naively moves the piece at (x1,y1) to (x2,y2). CALLER MUST ENSURE THE MOVE/CAPTURE IS LEGAL.
+   * Naively moves the piece at (x1,y1) to (x2,y2). If there is a piece at the target space,
+   * this acts as a capture. CALLER MUST ENSURE THE MOVE/CAPTURE IS LEGAL.
    * @param x1 source square x-coord
    * @param y1 source square y-coord
    * @param x2 target square x-coord
@@ -107,6 +108,11 @@ public class ChessBoard {
    */
   public void moveOrCapture(int x1, int y1, int x2, int y2) {
     verifyValidMoveOrCapture(x1, y1, x2, y2);
+    
+    ChessPiece target = this.board[x2][y2];
+    if (target != null) {
+      target.markAsCaptured();
+    }
 
     this.lastActivePiece = this.board[x1][y1];
     this.board[x2][y2] = this.board[x1][y1]; // replace

@@ -16,6 +16,30 @@ public class ChessGame {
     this.black = new ChessPlayer(p2Black, ChessColor.BLACK);
     this.board = new ChessBoard(this);
     this.whoseTurn = white; // white goes first
+    
+    giveMaterialToPlayers();
+  }
+  
+  /**
+   * Loops through a JUST-INITIALIZED board and gives material to each player
+   */
+  private void giveMaterialToPlayers() {
+    int[] rows = new int[] {0, 1, 6, 7};
+    ChessPiece c;
+    
+    for (int i : rows) {
+      for (int j = 0; j < 8; j++) {
+        c = this.board.getSquare(j, i);
+        if (c == null) { continue; }
+        
+        if (i < 2) {
+          this.white.giveMaterial(c);
+        }
+        else {
+          this.black.giveMaterial(c);
+        }
+      }
+    }
   }
   
   public ChessPlayer getWhoseTurn() {

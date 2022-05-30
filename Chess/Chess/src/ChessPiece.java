@@ -105,12 +105,24 @@ public abstract class ChessPiece {
     this.x = x;
     this.y = y;
   }
+  
+  /**
+   * Sets isCaptured to true
+   * @param isCaptured
+   */
+  public void markAsCaptured() {
+    this.isCaptured = true;
+    this.prevX = this.x;
+    this.prevY = this.y;
+    this.x = -1;
+    this.y = -1;
+  }
 
   /**
    * Returns the captured status of this piece
    * @return true if the piece is in a captured state, false if not
    */
-  public boolean getCaptured() {
+  public boolean getIsCaptured() {
     return isCaptured;
   }
 
@@ -136,38 +148,6 @@ public abstract class ChessPiece {
     return this.NAME;
   }
 
-  //	/**
-  //	 * Returns this piece's x-coordinate
-  //	 * @return this piece's x-coordinate
-  //	 */
-  //	public int getX() {
-  //	  return this.x;
-  //	}
-  //	
-  //	/**
-  //	 * Returns this piece's y-coordinate
-  //	 * @return this piece's y-coordinate
-  //	 */
-  //	public int getY() {
-  //	  return this.y;
-  //	}
-
-  /**
-   * Returns this piece's previous x-coordinate
-   * @return this piece's previous x-coordinate
-   */
-  public int getPrevX() {
-    return this.prevX;
-  }
-
-  /**
-   * Returns this piece's previous y-coordinate
-   * @return this piece's previous y-coordinate
-   */
-  public int getPrevY() {
-    return this.prevY;
-  }
-
   /**
    * Returns this piece's conventional material value (ex. pawn=1, queen=9,...)
    * @return this piece's conventional material value
@@ -184,17 +164,5 @@ public abstract class ChessPiece {
   public String toString() {
     return this.COLOR + " " + this.NAME;
   }
-
-  //	public static String toStringCompact(String pieceAbbrev, ChessColor color) {
-  //		String result = "";
-  //		if (color == ChessColor.WHITE) {
-  //			result = "w";
-  //		}
-  //		else {
-  //			result = "b";
-  //		}
-  //		result += pieceAbbrev;
-  //		return result;
-  //	}
 
 }

@@ -1,7 +1,10 @@
+import java.util.ArrayList;
+
 public class ChessPlayer {
   private String name;
   private ChessColor color;
   private boolean inCheck = false;
+  private ArrayList<ChessPiece> material = new ArrayList<ChessPiece>();
 
   public ChessPlayer(String name, ChessColor color) {
     this.name = name;
@@ -33,6 +36,10 @@ public class ChessPlayer {
   @Override
   public String toString() {
     return this.getName();
+  }
+  
+  public void giveMaterial(ChessPiece piece) {
+    this.material.add(piece);
   }
 
 }
