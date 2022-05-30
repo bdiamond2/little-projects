@@ -27,6 +27,12 @@ public class ChessGameDriver {
     int[] tgt;
 
     while (true) {
+      if (g.isGameOver()) {
+        System.out.println(g);
+        System.out.println(g.getWinner() + " wins!");
+        break;
+      }
+      
       System.out.println("\n" + g.getWhoseTurn() + "'s turn (" + g.getWhoseTurn().getColor() + ")");
       if (g.board.getKing(g.getWhoseTurn().getColor()).getIsInCheck()) {
         System.out.println(g.getWhoseTurn() + " is in check.");
