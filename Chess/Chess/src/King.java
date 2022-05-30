@@ -95,6 +95,10 @@ public class King extends ChessPiece {
     return null;
   }
   
+  public boolean getIsInCheck() {
+    return this.isInCheck;
+  }
+  
   public void setIsInCheck(boolean isInCheck) {
     this.isInCheck = isInCheck;
   }

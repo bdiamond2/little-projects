@@ -5,7 +5,7 @@ public class ChessPlayer {
   private ChessColor color;
   //private boolean inCheck = false;
   private ArrayList<ChessPiece> material = new ArrayList<ChessPiece>();
-  private King king;
+  //private King king;
 
   public ChessPlayer(String name, ChessColor color) {
     this.name = name;
@@ -40,9 +40,9 @@ public class ChessPlayer {
     return this.material;
   }
   
-  public King getKing() {
-    return this.king;
-  }
+//  public King getKing() {
+//    return this.king;
+//  }
 
   @Override
   public String toString() {
@@ -53,8 +53,8 @@ public class ChessPlayer {
     this.material.add(piece);
   }
   
-  public void assignKing(King king) {
-    this.king = king;
-  }
+//  public void assignKing(King king) {
+//    this.king = king;
+//  }
 
 }

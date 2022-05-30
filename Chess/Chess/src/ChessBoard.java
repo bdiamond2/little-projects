@@ -11,6 +11,8 @@ public class ChessBoard {
   private ChessPiece[][] board = new ChessPiece[8][8];
   protected ChessPiece lastActivePiece;
   protected ChessGame game;
+  private King whiteKing;
+  private King blackKing;
 
   public ChessBoard(ChessGame game) {
     this.game = game;
@@ -39,7 +41,9 @@ public class ChessBoard {
      */
     
     board[4][0] = new King(ChessColor.WHITE, this, 4, 0);
+    this.whiteKing = (King) board[4][0];
     board[4][7] = new King(ChessColor.BLACK, this, 4, 7);
+    this.blackKing = (King) board[4][7];
 
     // pawns
     for (int i = 0; i < 8; i++) {
@@ -109,7 +113,7 @@ public class ChessBoard {
    * @param x2 target square x-coord
    * @param y2 target square y-coord
    */
-  public void moveOrCapture(int x1, int y1, int x2, int y2) {
+  public void moveOrCapture(int x1, int y1, int x2, int y2, int x3, int y3) {
     verifyValidMoveOrCapture(x1, y1, x2, y2);
     
     // if this is a capture, mark the piece as captured
@@ -221,6 +225,18 @@ public class ChessBoard {
     }
     
     return false;
+  }
+  
+  public King getKing(ChessColor color) {
+    if (color == ChessColor.WHITE) {
+      return this.whiteKing;
+    }
+    else if (color == ChessColor.BLACK) {
+      return this.blackKing;
+    }
+    else {
+      throw new IllegalStateException("King must be black or white");
+    }
   }
 
 }

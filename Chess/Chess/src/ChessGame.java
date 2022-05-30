@@ -50,9 +50,9 @@ public class ChessGame {
         player.giveMaterial(c);
         
         // if we're on a king spot
-        if (j == 4 && (i == 0 || i == 7)) {
-          player.assignKing((King) c);
-        }
+//        if (j == 4 && (i == 0 || i == 7)) {
+//          player.assignKing((King) c);
+//        }
       }
     }
   }
@@ -75,15 +75,17 @@ public class ChessGame {
     }
     
     //TODO account for the king being in check (ugh)
-    king = this.whoseTurn.getKing();
+    king = this.board.getKing(this.whoseTurn.getColor());
     if (this.board.isThreatened(king.x, king.y, this.notWhoseTurn.getColor())) {
-      this.whoseTurn.getKing().setIsInCheck(true);
+      king.setIsInCheck(true);
     }
     // check is only removed immediately after moving
     
     if (!tryMove(x1, y1, x2, y2)) {
       return false;
     }
+    
+    //TODO check for checkmate...in here...somewhere
     
     toggleWhoseTurn();
     return true;
@@ -99,14 +101,24 @@ public class ChessGame {
    */
   private boolean tryMove(int x1, int y1, int x2, int y2) {
     ChessPiece pieceToMove = this.board.getSquare(x1, y1);
+    ChessPiece mirrorPieceToMove = this.mirror.getSquare(x1, y1);
 
     // redundant, but we should do a null check wherever we're hoping it's not null
     if (pieceToMove == null) { return false; }
     
+    // try this move on the mirror board and see if we're in check afterwards
+    
+
+    
     if (pieceToMove.canMove(x2, y2)) {
+      mirrorPieceToMove.move(x2, y2);
+      
+      
+      
       pieceToMove.move(x2, y2);
     }
     else if (pieceToMove.canCapture(x2, y2)) {
+      mirrorPieceToMove.capture(x2, y2);
       pieceToMove.capture(x2, y2);
     }
     else {
