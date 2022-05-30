@@ -175,35 +175,48 @@ public class ChessBoard {
   }
   
   /**
-   * Checks if a given square is threatened by any piece on the specified side.
+   * Checks if a given square is threatened by any piece from the specified side.
    * NOTE: Pinned pieces count as valid threats (because they can still check the king)!
    * @param x x of the square being checked
    * @param y y of the square being checked
+   * @param color the side that is doing the potential threatening to x,y
    * @return true if any piece on the given side threatens the given square, false if not
    */
   public boolean isThreatened(int x, int y, ChessColor color) {
-    ChessPlayer player;
-    ArrayList<ChessPiece> material;
-    
-    // I don't love the board referencing the players, but it's more efficient than looping
-    // through every single board square gathering up the pieces
-    if (color == ChessColor.WHITE) {
-      player = this.game.white;
-    }
-    else if (color == ChessColor.BLACK) {
-      player = this.game.black;
-    }
-    else {
-      throw new IllegalStateException("Piece must be black or white");
-    }
-    
-    // let this throw a NullPointerException if the player is null, that'd be bad
-    material = player.getMaterial();
-    
-    for (ChessPiece c : material) {
-      // c shouldn't be null but it's not bad enough to crash the game over
-      if (c != null && !c.getIsCaptured() && c.canCapture(x, y)) {
-        return true;
+    ChessPiece c;
+//    ChessPlayer player;
+//    ArrayList<ChessPiece> material;
+//    
+//    // I don't love the board referencing the players, but it's more efficient than looping
+//    // through every single board square gathering up the pieces
+//    if (color == ChessColor.WHITE) {
+//      player = this.game.white;
+//    }
+//    else if (color == ChessColor.BLACK) {
+//      player = this.game.black;
+//    }
+//    else {
+//      throw new IllegalStateException("Piece must be black or white");
+//    }
+//    
+//    // let this throw a NullPointerException if the player is null, that'd be bad
+//    material = player.getMaterial();
+//    
+//    for (ChessPiece c : material) {
+//      // c shouldn't be null but it's not bad enough to crash the game over
+//      if (c != null && !c.getIsCaptured() && c.canCapture(x, y)) {
+//        return true;
+//      }
+//    }
+    // don't use the players' material lists because we need to keep the focus on this
+    // specific board object (because this might be a mirror board)
+    for (int row = 0; row <= 7; row++) {
+      for (int col = 0; col <= 7; col++) {
+        c = this.getSquare(row, col);
+        // if the square is occupied, it's on the attacking side, and it can capture x,y
+        if (c != null && c.getColor() == color && c.canCapture(x, y)) {
+          return true;
+        }
       }
     }
     
