@@ -73,6 +73,19 @@ public class ChessGame {
   }
 
   /**
+   * Wrapper function for nextTurn() that takes conventional chessboard coordinates instead of
+   * array coordinates.
+   * @param square1
+   * @param square2
+   * @return
+   */
+  public boolean nextTurnNotation(String square1, String square2) {
+    int[] src = ChessGame.notationToCoordinates(square1);
+    int[] tgt = ChessGame.notationToCoordinates(square2);
+    return this.nextTurn(src[0], src[1], tgt[0], tgt[1]);
+  }
+  
+  /**
    * Processes a new move/turn for the current player.
    * @return true if the move was successful, false if not
    */

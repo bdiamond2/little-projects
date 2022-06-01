@@ -202,8 +202,6 @@ public class ChessGameTester {
   public static boolean testCheck() {
     System.out.println("\n\ntestCheck()...");
     ChessGame g = new ChessGame("Ben", "Maithilee");
-    int[] src;
-    int[] tgt;
 
     System.out.println(g);
     String[] moves = new String[] {
@@ -218,9 +216,7 @@ public class ChessGameTester {
     };
 
     for (String m : moves) {
-      src = ChessGame.notationToCoordinates(m.substring(0, 2));
-      tgt = ChessGame.notationToCoordinates(m.substring(3, 5));
-      g.nextTurn(src[0], src[1], tgt[0], tgt[1]);
+      g.nextTurnNotation(m.substring(0, 2), m.substring(3, 5));
     }
     System.out.println(g);
 
@@ -302,13 +298,11 @@ public class ChessGameTester {
 
     return true;
   }
+  
 
   public static boolean testCheckmate() {
     System.out.println("\n\ntestCheckmate()...");
     ChessGame g = new ChessGame("Ben", "Maithilee");
-    int[] src;
-    int[] tgt;
-    String nextMove;
 
     String[] moves = new String[] {
         "e2:e3",
@@ -324,15 +318,34 @@ public class ChessGameTester {
         "d2:d3"
     };
     for (String m : moves) {
-      src = ChessGame.notationToCoordinates(m.substring(0, 2));
-      tgt = ChessGame.notationToCoordinates(m.substring(3, 5));
-      g.nextTurn(src[0], src[1], tgt[0], tgt[1]);
+      g.nextTurnNotation(m.substring(0, 2), m.substring(3, 5));
     }
 
     if (g.isGameOver()) {
       return false;
     }
 
+    g.nextTurnNotation("f6", "f5");
+    if (!g.isGameOver()) {
+      return false;
+    }
+    
+    System.out.println(g);
+    
+    // redo this, except make the checkmating pawn threatened by a white pawn
+    g = new ChessGame("Ben", "Maithilee");
+    for (String m : moves) {
+      g.nextTurnNotation(m.substring(0, 2), m.substring(3, 5));
+    }
+    g.nextTurnNotation("a7", "a6");
+    g.nextTurnNotation("g2", "g4"); // protecting pawn
+    g.nextTurnNotation("f6", "f5");
+    
+    System.out.println(g);
+    
+    if (g.isGameOver()) {
+      return false;
+    }
     
     System.out.println(g);
     return true;

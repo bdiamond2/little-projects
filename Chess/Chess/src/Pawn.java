@@ -119,21 +119,25 @@ public class Pawn extends ChessPiece {
       if (!ChessBoard.isOnBoard(this.x, this.y + pawnForward(1))) {
         throw new IllegalStateException("Pawn cannot be on last row");
       }
-  
-      // one square move
-      if (this.board.getSquare(x, y + pawnForward(1)) != null) { // there's a piece in front of it
-        return result; // empty list, no valid moves
+      
+      // regular move
+      if (this.canMove(this.x, this.y + pawnForward(1))) {
+        result.add(new Integer[] {this.x, y + pawnForward(1)});
       }
-      else {
-        result.add(new Integer[] {x, y + pawnForward(1)});
+      
+      // double move
+      if (this.canMove(this.x, this.y + pawnForward(2))) {
+        result.add(new Integer[] {this.x, y + pawnForward(2)});
       }
-  
-      // double square move on first turn
-      if (!this.hasMovedOrCaptured
-          && this.board.getSquare(x, y + pawnForward(1)) == null
-          && this.board.getSquare(x, y + pawnForward(2)) == null) {
-        result.add(new Integer[] {x, y + pawnForward(2)});
+      
+      // captures
+      if (this.canCapture(this.x - 1, this.y + pawnForward(1))) {
+        result.add(new Integer[] {this.x - 1, this.y + pawnForward(1)});
       }
+      if (this.canCapture(this.x + 1, this.y + pawnForward(1))) {
+        result.add(new Integer[] {this.x - 1, this.y + pawnForward(1)});
+      }
+      
       return result;
     }
 
