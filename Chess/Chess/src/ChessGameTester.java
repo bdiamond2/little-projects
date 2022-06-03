@@ -298,7 +298,7 @@ public class ChessGameTester {
 
     return true;
   }
-  
+
 
   public static boolean testCheckmate() {
     System.out.println("\n\ntestCheckmate()...");
@@ -329,9 +329,9 @@ public class ChessGameTester {
     if (!g.isGameOver()) {
       return false;
     }
-    
+
     System.out.println(g);
-    
+
     // redo this, except make the checkmating pawn threatened by a white pawn
     g = new ChessGame("Ben", "Maithilee");
     for (String m : moves) {
@@ -340,13 +340,13 @@ public class ChessGameTester {
     g.nextTurnNotation("a7", "a6");
     g.nextTurnNotation("g2", "g4"); // protecting pawn
     g.nextTurnNotation("f6", "f5");
-    
+
     System.out.println(g);
-    
+
     if (g.isGameOver()) {
       return false;
     }
-    
+
     System.out.println(g);
     return true;
   }

@@ -107,39 +107,39 @@ public class Pawn extends ChessPiece {
     }
   }
 
-    /**
-     * Returns all the possible squares where this pawn could move.
-     * @return ArrayList of x/y coordinates where this pawn could move
-     */
-    @Override
-    public ArrayList<Integer[]> getPossibleMovesOrCaptures() {
-      ArrayList<Integer[]> result = new ArrayList<Integer[]>();
-  
-      // valid state check
-      if (!ChessBoard.isOnBoard(this.x, this.y + pawnForward(1))) {
-        throw new IllegalStateException("Pawn cannot be on last row");
-      }
-      
-      // regular move
-      if (this.canMove(this.x, this.y + pawnForward(1))) {
-        result.add(new Integer[] {this.x, y + pawnForward(1)});
-      }
-      
-      // double move
-      if (this.canMove(this.x, this.y + pawnForward(2))) {
-        result.add(new Integer[] {this.x, y + pawnForward(2)});
-      }
-      
-      // captures
-      if (this.canCapture(this.x - 1, this.y + pawnForward(1))) {
-        result.add(new Integer[] {this.x - 1, this.y + pawnForward(1)});
-      }
-      if (this.canCapture(this.x + 1, this.y + pawnForward(1))) {
-        result.add(new Integer[] {this.x - 1, this.y + pawnForward(1)});
-      }
-      
-      return result;
+  /**
+   * Returns all the possible squares where this pawn could move.
+   * @return ArrayList of x/y coordinates where this pawn could move
+   */
+  @Override
+  public ArrayList<Integer[]> getPossibleMovesOrCaptures() {
+    ArrayList<Integer[]> result = new ArrayList<Integer[]>();
+
+    // valid state check
+    if (!ChessBoard.isOnBoard(this.x, this.y + pawnForward(1))) {
+      throw new IllegalStateException("Pawn cannot be on last row");
     }
+
+    // regular move
+    if (this.canMove(this.x, this.y + pawnForward(1))) {
+      result.add(new Integer[] {this.x, y + pawnForward(1)});
+    }
+
+    // double move
+    if (this.canMove(this.x, this.y + pawnForward(2))) {
+      result.add(new Integer[] {this.x, y + pawnForward(2)});
+    }
+
+    // captures
+    if (this.canCapture(this.x - 1, this.y + pawnForward(1))) {
+      result.add(new Integer[] {this.x - 1, this.y + pawnForward(1)});
+    }
+    if (this.canCapture(this.x + 1, this.y + pawnForward(1))) {
+      result.add(new Integer[] {this.x - 1, this.y + pawnForward(1)});
+    }
+
+    return result;
+  }
 
   /**
    * Takes x,y coordinates and returns whether the pawn could capture the piece there.

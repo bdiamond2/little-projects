@@ -84,7 +84,7 @@ public class ChessGame {
     int[] tgt = ChessGame.notationToCoordinates(square2);
     return this.nextTurn(src[0], src[1], tgt[0], tgt[1]);
   }
-  
+
   /**
    * Processes a new move/turn for the current player.
    * @return true if the move was successful, false if not
