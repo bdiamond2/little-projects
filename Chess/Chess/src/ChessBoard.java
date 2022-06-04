@@ -89,7 +89,7 @@ public class ChessBoard {
   public ChessPiece getSquare(int x, int y) {
     return this.board[x][y];
   }
-  
+
   public void setSquare(int x, int y, ChessPiece piece) {
     this.board[x][y] = piece;
   }
@@ -197,13 +197,45 @@ public class ChessBoard {
     }
     throw new IllegalStateException("Each color must have a king present on the board");
   }
-  
-  public boolean hasLinearPath(int x1, int y1, int x2, int y2) {
+
+  /**
+   * Checks whether there is a vertical or horizontal path between x1,y1 and x2,y2, EXCLUDING case
+   * where x1,y1 == x2,y2.
+   * @param x1 x of square 1
+   * @param y1 y of square 1
+   * @param x2 x of square 2
+   * @param y2 y of square 2
+   * @return true if there exists a horizontal or vertical path between x1,y1 and x2,y2 AND both
+   * points are different, false if not
+   */
+  public boolean hasHorizOrVertPath(int x1, int y1, int x2, int y2) {
     if (!ChessBoard.isOnBoard(x1, y1) || !ChessBoard.isOnBoard(x2, y2)) {
       return false;
     }
-    
-    return false;
+      
+    // if dx XOR dy is zero that means it's up/down or left/right movement
+    return Math.abs(x2 - x1) == 0 ^ Math.abs(y2 - y1) == 0;
+  }
+
+  /**
+   * Checks whether there is a diagonal path between x1,y1 and x2,y2, EXCLUDING case
+   * where x1,y1 == x2,y2.
+   * @param x1 x of square 1
+   * @param y1 y of square 1
+   * @param x2 x of square 2
+   * @param y2 y of square 2
+   * @return true if there exists a diagonal path between x1,y1 and x2,y2 AND both
+   * points are different, false if not
+   */
+  public boolean hasDiagonalPath(int x1, int y1, int x2, int y2) {
+    if (!ChessBoard.isOnBoard(x1, y1) || !ChessBoard.isOnBoard(x2, y2)) {
+      return false;
+    }
+
+    // |dx| == |dy| && different coordinates => diagonal movement
+    // logically unnecessary to check that y1 != y2 because we already know |dx| == |dy|
+    return Math.abs(x2 - x1) == Math.abs(y2 - y1) && x1 != x2;
+
   }
 
 }
