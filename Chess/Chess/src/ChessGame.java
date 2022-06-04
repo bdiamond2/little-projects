@@ -99,7 +99,7 @@ public class ChessGame {
 
   /**
    * Processes a new move/turn for the current player.
-   * @return true if the move was successful, false if not
+   * @return true if the move was legal, false if not
    */
   public boolean nextTurn(int x1, int y1, int x2, int y2) {
     if (this.isGameOver()) {
@@ -141,7 +141,6 @@ public class ChessGame {
    */
   private boolean isCheckmated(ChessPlayer player) {
     ArrayList<Integer[]> possibleMoves;
-    boolean isCheckmate = true;
     ChessPiece tempLastActive;
     ChessPiece c;
 
@@ -152,8 +151,8 @@ public class ChessGame {
 
     // loop through all this player's pieces and see if any of them can move in a way that
     // ends check
-    for (int x = 0; x < ChessBoard.X_DIM && isCheckmate; x++) {
-      for (int y = 0; y < ChessBoard.Y_DIM && isCheckmate; y++) {
+    for (int x = 0; x < ChessBoard.X_DIM; x++) {
+      for (int y = 0; y < ChessBoard.Y_DIM; y++) {
         c = this.board.getSquare(x, y);
 
         // found one of our pieces
@@ -163,6 +162,7 @@ public class ChessGame {
           // loop through every possible (really potential) move
           for (Integer[] move : possibleMoves) {
             tempLastActive = this.mirror.lastActivePiece; // preserve the last active piece
+            
             if (this.tryMoveOnMirror(c.getX(), c.getY(), move[0], move[1])) {
               // if there's a move that escapes checkmate, undo the move and return false
               this.undoMirrorMove(c.getX(), c.getY(), move[0], move[1], tempLastActive);
@@ -172,7 +172,7 @@ public class ChessGame {
         }
       }
     }
-    // didn't find any checkmate-saving moves
+    // didn't find any checkmate-saving moves if we made it this far
     return true;
   }
 
@@ -346,6 +346,18 @@ public class ChessGame {
     }
 
     return new int[] {x, y};
+  }
+  
+  public static ChessColor getOtherColor(ChessColor color) {
+    if (color == ChessColor.WHITE) {
+      return ChessColor.BLACK;
+    }
+    else if (color == ChessColor.BLACK) {
+      return ChessColor.WHITE;
+    }
+    else {
+      throw new IllegalStateException("Unknown chess color");
+    }
   }
 
 }

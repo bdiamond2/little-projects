@@ -58,17 +58,89 @@ public class King extends ChessPiece {
   }
 
   /**
-   * Returns whether the provided square is an attempt to castle kingside AND if castle kingside
-   * is possible.
-   * @return true if the move to x,y is a possible castle kingside, false if not
+   * Returns whether the provided square would be a valid castle kingside
+   * @return true if the moving the king to x,y is a valid castle kingside, false if not
    */
-  public boolean isCastleKingside(int x, int y) {
-    // source and target columns
-    if (this.getX() != 4 || x != 6) {
+  public boolean canCastleKingside(int x, int y) {
+    return canCastleHelper(x, y, 1);
+  }
+
+  /**
+   * Returns whether the provided square is an attempt to castle queenside AND if castle queenside
+   * is possible.
+   * @return true if the move to x,y is a possible castle queenside, false if not
+   */
+  public boolean canCastleQueenside(int x, int y) {
+     return canCastleHelper(x, y, 0);
+  }
+  
+  /**
+   * Core helper function to check for kingside or queenside castling
+   * @param x x of square for the king to move to
+   * @param y y of square for the king to move to 
+   * @param mode 1 for kingside, 0 for queenside
+   * @return true if the move to x,y would be a valid castling
+   */
+  private boolean canCastleHelper(int x, int y, int mode) {
+    // boilerplate checks
+    if (mode != 0 && mode != 1) {
+      throw new IllegalArgumentException("Invalid castling mode provided");
+    }
+    if (!ChessBoard.isOnBoard(x, y)) {
+      return false;
+    }
+    
+    // king can't have moved
+    if (this.hasMovedOrCaptured) {
+      return false;
+    }
+    
+    // can't use castle to escape check
+    if (this.isInCheck) {
+      return false;
+    }
+    
+    // distinguishing kingside from queenside
+    final int colKingFrom = 4;
+    final int colKingTo;
+    final int colRookFrom;
+    final int colRookTo;
+    
+    if (mode == 1) {
+      colKingTo = 6;
+      colRookFrom = 7;
+      colRookTo = 5;
+    }
+    else {
+      colKingTo = 2;
+      colRookFrom = 0;
+      colRookTo = 3;
+    }
+    
+    // path between king and rook must be clear
+    if (!this.board.hasClearHorizontalPath(this.getX(), this.getY(), colRookFrom, this.getY())) {
       return false;
     }
 
-    // source and target rows
+    // right colored rook has to be in the right spot
+    ChessPiece maybeRook = this.board.getSquare(colRookFrom, this.getY());
+    if (maybeRook == null
+        || !(maybeRook instanceof Rook)
+        || maybeRook.getColor() != this.getColor()) {
+      return false;
+    }
+    
+    // the rook can't have moved
+    if ( ((Rook) maybeRook).getHasMovedOrCaptured() ) {
+      return false;
+    }
+    
+    // check source and target columns
+    if (this.getX() != colKingFrom || x != colKingTo) {
+      return false;
+    }
+
+    // check source and target rows
     if (this.getColor() == ChessColor.WHITE) {
       if (this.getY() != 0 || y != 0) {
         return false;
@@ -82,18 +154,19 @@ public class King extends ChessPiece {
     else {
       throw new IllegalStateException("Piece is neither black nor white");
     }
+    
+    // none of the castling squares can be threatened
+    // (this is slightly redundant because it checks all 3 squares, and we know the king isn't in check)
+    int xStart = Math.min(colKingFrom, colKingTo);
+    int xEnd = Math.max(colKingFrom, colKingTo);
+    for (int xLoop = xStart; xLoop <= xEnd; xLoop++) {
+      if ( this.board.isThreatened(xLoop, this.getY(), ChessGame.getOtherColor(this.getColor())) ) {
+        return false;
+      }
+    }
 
-    return false;
-  }
-
-  /**
-   * Returns whether the provided square is an attempt to castle queenside AND if castle queenside
-   * is possible.
-   * @return true if the move to x,y is a possible castle queenside, false if not
-   */
-  public boolean isCastleQueenside(int x, int y) {
-    // TODO
-    return false;
+    // passed all criteria!
+    return true;
   }
 
   @Override
