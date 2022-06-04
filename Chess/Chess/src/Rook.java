@@ -52,46 +52,25 @@ public class Rook extends ChessPiece {
       return false;
     }
 
-    boolean pathIsClear = true;
-    
-    if (ChessBoard.hasHorizontalPath(this.getX(), this.getY(), x, y)) {
-      int xStart;
-      int xEnd;
-      if (x < this.getX()) { // x -> this.x-1
-        xStart = x;
-        xEnd = this.getX() - 1;
-      }
-      else if (x > this.getX()) { // this.x+1 -> x
-        xStart = this.getX() + 1;
-        xEnd = x;
-      }
-      else {
-        throw new IllegalStateException("Logical error in hasHorizontalPath()");
-      }
-      
-      // check that every square between x and us is empty
-      for (int i = xStart; i <= xEnd; i++) {
-        if (this.board.getSquare(i, this.getY()) != null) {
-          pathIsClear = false;
-          break;
-        }
-      }
-      
-      return pathIsClear;
-    }
-    else if (ChessBoard.hasVerticalPath(this.getX(), this.getY(), x, y)) {
-      // TODO
-      return pathIsClear;
-    }
-    else {
-      return false;
-    }
+    return this.board.hasClearHorizontalPath(this.getX(), this.getY(), x, y) ||
+        this.board.hasClearVerticalPath(this.getX(), this.getY(), x, y);
   }
 
   @Override
   public boolean canCapture(int x, int y) {
-    // TODO Auto-generated method stub
-    return false;
+    if (!ChessBoard.isOnBoard(x, y)) {
+      return false;
+    }
+    
+    // can't move to occupied space (only capture)
+    ChessPiece target = this.board.getSquare(x, y);
+    // capture square must contain a piece of the opposite color
+    if (target == null || target.getColor() == this.getColor()) {
+      return false;
+    }
+
+    return this.board.hasClearHorizontalPath(this.getX(), this.getY(), x, y) ||
+        this.board.hasClearVerticalPath(this.getX(), this.getY(), x, y);
   }
 
   @Override

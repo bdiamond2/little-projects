@@ -199,39 +199,101 @@ public class ChessBoard {
   }
 
   /**
-   * Checks whether there is a horizontal path between x1,y1 and x2,y2, EXCLUDING case
-   * where x1,y1 == x2,y2.
-   * @param x1 x of square 1
-   * @param y1 y of square 1
-   * @param x2 x of square 2
-   * @param y2 y of square 2
-   * @return true if there exists a horizontal path between x1,y1 and x2,y2 AND both
-   * points are different, false if not
+   * Checks whether there is an open horizontal path between x1,y1 and x2,y2, EXCLUDING endpoints
+   * and where x1,y1 == x2,y2
+   * @param x1 x of source square
+   * @param y1 y of source square
+   * @param x2 x of target square
+   * @param y2 y of target square
+   * @return true if there exists a clear horizontal path between (exclusive) x1,y1 and x2,y2 AND
+   * both points are different, false if not
    */
-  public static boolean hasHorizontalPath(int x1, int y1, int x2, int y2) {
+  public boolean hasClearHorizontalPath(int x1, int y1, int x2, int y2) {
     if (!ChessBoard.isOnBoard(x1, y1) || !ChessBoard.isOnBoard(x2, y2)) {
       return false;
     }
       
-    return Math.abs(x2 - x1) > 0 && Math.abs(y2 - y1) == 0;
+    // |dx| must be > 0 and |dy| must == 0
+    if (Math.abs(x2 - x1) == 0 || Math.abs(y2 - y1) > 0) {
+      return false;
+    }
+    
+    // now check if the path between the two points is clear
+    // we're excluding x1,y1 because that would be occupied by the current piece
+    boolean pathIsClear = true; // default to true, switch to false if we run into another piece
+    int xStart;
+    int xEnd;
+    // we want this to work for both canMove() and canCapture() so we're excluding the squares
+    // themselves and just checking what's between them
+    if (x2 < x1) { // looping from x2 -> x1 - 1
+      xStart = x2 + 1;
+      xEnd = x1 - 1;
+    }
+    else if (x2 > x1) { // looping from x1+1 -> x2
+      xStart = x1 + 1;
+      xEnd = x2 - 1;
+    }
+    else {
+      throw new IllegalStateException("Logical error in hasClearHorizontalPath()");
+    }
+
+    // check that every square from x1,y1 to x2,y2 is clear
+    for (int xLoop = xStart; xLoop <= xEnd; xLoop++) {
+      if (this.getSquare(xLoop, y1) != null) { // found a piece blocking the way
+        pathIsClear = false;
+        break;
+      }
+    }
+
+    return pathIsClear;
   }
   
   /**
-   * Checks whether there is a horizontal path between x1,y1 and x2,y2, EXCLUDING case
-   * where x1,y1 == x2,y2.
+   * Checks whether there is an open vertical path between x1,y1 and x2,y2, EXCLUDING endpoints
    * @param x1 x of square 1
    * @param y1 y of square 1
    * @param x2 x of square 2
    * @param y2 y of square 2
-   * @return true if there exists a horizontal path between x1,y1 and x2,y2 AND both
+   * @return true if there exists a vertical path between x1,y1 and x2,y2 AND both
    * points are different, false if not
    */
-  public static boolean hasVerticalPath(int x1, int y1, int x2, int y2) {
+  public boolean hasClearVerticalPath(int x1, int y1, int x2, int y2) {
     if (!ChessBoard.isOnBoard(x1, y1) || !ChessBoard.isOnBoard(x2, y2)) {
       return false;
     }
       
-    return Math.abs(x2 - x1) == 0 && Math.abs(y2 - y1) > 0;
+    // |dx| must be == 0 and |dy| must be > 0
+    if (Math.abs(x2 - x1) > 0 || Math.abs(y2 - y1) == 0) {
+      return false;
+    }
+    
+    // check if path between y1 and y2 (excluding endpoints) is clear
+    boolean pathIsClear = true;
+    int yStart;
+    int yEnd;
+    // we want this to work for both canMove() and canCapture() so we're excluding the squares
+    // themselves and just checking what's between them
+    if (y2 < y1) {
+      yStart = y2 + 1;
+      yEnd = y1 - 1;
+    }
+    else if (y2 > y1) {
+      yStart = y1 + 1;
+      yEnd = y2 - 1;
+    }
+    else {
+      // shouldn't have returned true if they were equal
+      throw new IllegalStateException("Logical error in hasClearVerticalPath()");
+    }
+    
+    // check that every square from this to y is clear
+    for (int yLoop = yStart; yLoop <= yEnd; yLoop++) {
+      if (this.getSquare(x1, yLoop) != null) { // found a piece blocking the way
+        pathIsClear = false;
+        break;
+      }
+    }
+    return pathIsClear;
   }
 
   /**
