@@ -55,6 +55,12 @@ public class Rook extends ChessPiece {
     return this.board.hasClearHorizontalPath(this.getX(), this.getY(), x, y) ||
         this.board.hasClearVerticalPath(this.getX(), this.getY(), x, y);
   }
+  
+  @Override
+  public void move(int x, int y) {
+    super.move(x, y);
+    if (!this.hasMovedOrCaptured) { this.hasMovedOrCaptured = true; }
+  }
 
   @Override
   public boolean canCapture(int x, int y) {
@@ -72,12 +78,33 @@ public class Rook extends ChessPiece {
     return this.board.hasClearHorizontalPath(this.getX(), this.getY(), x, y) ||
         this.board.hasClearVerticalPath(this.getX(), this.getY(), x, y);
   }
+  
+  @Override
+  public void capture(int x, int y) {
+    super.capture(x, y);
+    if (!this.hasMovedOrCaptured) { this.hasMovedOrCaptured = true; }
+  }
 
   @Override
   public ArrayList<Integer[]> getPossibleMovesOrCaptures() {
-    ArrayList<Integer[]> ret = new ArrayList<Integer[]>();
-    // TODO Auto-generated method stub
-    return ret;
+    ArrayList<Integer[]> result = new ArrayList<Integer[]>();
+    
+    // check entire column
+    for (int yLoop = 0; yLoop < ChessBoard.Y_DIM; yLoop++) {
+      if (this.canMove(this.getX(), yLoop) || this.canCapture(this.getX(), yLoop)) {
+        result.add(new Integer[] { this.getX(), yLoop });
+      }
+    }
+    
+    // check entire row
+    for (int xLoop = 0; xLoop < ChessBoard.X_DIM; xLoop++) {
+      if (this.canMove(xLoop, this.getY()) || this.canCapture(xLoop, this.getY())) {
+        result.add(new Integer[] { xLoop, this.getY() });
+      }
+    }
+    
+    // check entire row
+    return result;
   }
   
   @Override

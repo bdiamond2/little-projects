@@ -51,11 +51,6 @@ public class ChessGame {
           player = this.black;
         }
         player.giveMaterial(c);
-
-        // if we're on a king spot
-        //        if (j == 4 && (i == 0 || i == 7)) {
-        //          player.assignKing((King) c);
-        //        }
       }
     }
   }
@@ -120,7 +115,6 @@ public class ChessGame {
   }
 
   private void checkForCheckmate() {
-    King nextKing = this.board.getKing(this.whoseTurn.getColor());
     ArrayList<Integer[]> possibleMoves;
     boolean isCheckmate = true;
     ChessPiece tempLastActive;
