@@ -13,10 +13,10 @@ public abstract class ChessPiece {
 
   // Almost made these private with getters and setters but that's just too annoying with
   // an abstract class.
-  protected int x = -1;
-  protected int y = -1;
-  protected int prevX = -1;
-  protected int prevY = -1;
+  private int x = -1;
+  private int y = -1;
+  private int prevX = -1;
+  private int prevY = -1;
 
   private int materialValue = -1; // default value
   protected ChessBoard board; // chess board that this piece is on
@@ -184,6 +184,70 @@ public abstract class ChessPiece {
    */
   public int getMaterialValue() {
     return materialValue;
+  }
+  
+  /**
+   * Returns this piece's current x-position
+   * @return this piece's current x-position
+   */
+  public int getX() {
+    return this.x;
+  }
+  
+  /**
+   * Returns this piece's current y-position
+   * @return this piece's current y-position
+   */
+  public int getY() {
+    return this.y;
+  }
+  
+  /**
+   * Returns this piece's previous x-position
+   * @return this piece's previous x-position
+   */
+  public int getPrevX() {
+    return this.prevX;
+  }
+  
+  /**
+   * Returns this piece's previous y-position
+   * @return this piece's previous y-position
+   */
+  public int getPrevY() {
+    return this.prevY;
+  }
+  
+  /**
+   * Sets this piece's current x-position
+   * @param x new x-position
+   */
+  public void setX(int x) {
+    this.x = x;
+  }
+  
+  /**
+   * Sets this piece's current y-position
+   * @param y new y-position
+   */
+  public void setY(int y) {
+   this.y = y; 
+  }
+  
+  /**
+   * Sets this piece's previous x-position
+   * @param prevX new previous x-position
+   */
+  public void setPrevX(int prevX) {
+    this.prevX = prevX;
+  }
+  
+  /**
+   * Sets this piece's previous y-position
+   * @param prevY new previous y-position
+   */
+  public void setPrevY(int prevY) {
+    this.prevY = prevY;
   }
 
   /**

@@ -10,7 +10,7 @@ public class King extends ChessPiece {
    */
   @Override
   public King getDeepCopy(ChessBoard newBoard) {
-    King deepCopy = new King(this.getColor(), newBoard, this.x, this.y);
+    King deepCopy = new King(this.getColor(), newBoard, this.getX(), this.getY());
     ChessPiece.copyBaseAttributes(this, deepCopy);
     deepCopy.hasMovedOrCaptured = this.hasMovedOrCaptured;
     deepCopy.isInCheck = this.isInCheck;
@@ -51,8 +51,8 @@ public class King extends ChessPiece {
    * @return true if x,y is exactly one space away
    */
   private boolean isAdjacentSquare(int x, int y) {
-    int dx = Math.abs(this.x - x);
-    int dy = Math.abs(this.y - y);
+    int dx = Math.abs(this.getX() - x);
+    int dy = Math.abs(this.getY() - y);
 
     return (dx <= 1 && dy <= 1 && dx + dy > 0);
   }
@@ -64,18 +64,18 @@ public class King extends ChessPiece {
    */
   public boolean isCastleKingside(int x, int y) {
     // source and target columns
-    if (this.x != 4 || x != 6) {
+    if (this.getX() != 4 || x != 6) {
       return false;
     }
 
     // source and target rows
     if (this.getColor() == ChessColor.WHITE) {
-      if (this.y != 0 || y != 0) {
+      if (this.getY() != 0 || y != 0) {
         return false;
       }
     }
     else if (this.getColor() == ChessColor.BLACK) {
-      if (this.y != 7 || y != 7) {
+      if (this.getY() != 7 || y != 7) {
         return false;
       }
     }
@@ -134,8 +134,8 @@ public class King extends ChessPiece {
    */
   public ArrayList<Integer[]> getPossibleMovesOrCaptures() {
     ArrayList<Integer[]> moves = new ArrayList<Integer[]>();
-    for (int x = this.x - 1; x < this.x + 2; x++) {
-      for (int y = this.y - 1; y < this.y + 2; y++) {
+    for (int x = this.getX() - 1; x < this.getX() + 2; x++) {
+      for (int y = this.getY() - 1; y < this.getY() + 2; y++) {
         if (this.canMove(x, y) || this.canCapture(x, y)) {
           moves.add(new Integer[] {x, y});
         }

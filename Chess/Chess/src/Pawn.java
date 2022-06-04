@@ -15,7 +15,7 @@ public class Pawn extends ChessPiece {
 
   @Override
   public Pawn getDeepCopy(ChessBoard newBoard) {
-    Pawn deepCopy = new Pawn(this.getColor(), newBoard, this.x, this.y);
+    Pawn deepCopy = new Pawn(this.getColor(), newBoard, this.getX(), this.getY());
     ChessPiece.copyBaseAttributes(this, deepCopy);
 
     deepCopy.hasMovedOrCaptured = this.hasMovedOrCaptured;
@@ -68,7 +68,7 @@ public class Pawn extends ChessPiece {
     }
 
     // pawns can't move to a different column
-    if (this.x != x) {
+    if (this.getX() != x) {
       return false;
     }
 
@@ -78,12 +78,12 @@ public class Pawn extends ChessPiece {
     }
 
     // vanilla move
-    if (y == this.y + pawnForward(1)) {
+    if (y == this.getY() + pawnForward(1)) {
       return true;
     }
     // first move double move
     // target is 2 rows up, pawn hasn't moved, and the path is clear
-    if (y == this.y + pawnForward(2) &&
+    if (y == this.getY() + pawnForward(2) &&
         !this.hasMovedOrCaptured &&
         this.board.getSquare(x, y - pawnForward(1)) == null) {
       return true;
@@ -102,7 +102,7 @@ public class Pawn extends ChessPiece {
     if (!this.hasMovedOrCaptured) { this.hasMovedOrCaptured = true; }
 
     // pawn has reached the end of the board (i.e. going one more step would be off the board)
-    if (!ChessBoard.isOnBoard(this.x, this.y + pawnForward(1))) {
+    if (!ChessBoard.isOnBoard(this.getX(), this.getY() + pawnForward(1))) {
       promote(); //TODO actually implement this
     }
   }
@@ -116,26 +116,26 @@ public class Pawn extends ChessPiece {
     ArrayList<Integer[]> result = new ArrayList<Integer[]>();
 
     // valid state check
-    if (!ChessBoard.isOnBoard(this.x, this.y + pawnForward(1))) {
+    if (!ChessBoard.isOnBoard(this.getX(), this.getY() + pawnForward(1))) {
       throw new IllegalStateException("Pawn cannot be on last row");
     }
 
     // regular move
-    if (this.canMove(this.x, this.y + pawnForward(1))) {
-      result.add(new Integer[] {this.x, y + pawnForward(1)});
+    if (this.canMove(this.getX(), this.getY() + pawnForward(1))) {
+      result.add(new Integer[] {this.getX(), this.getY() + pawnForward(1)});
     }
 
     // double move
-    if (this.canMove(this.x, this.y + pawnForward(2))) {
-      result.add(new Integer[] {this.x, y + pawnForward(2)});
+    if (this.canMove(this.getX(), this.getY() + pawnForward(2))) {
+      result.add(new Integer[] {this.getX(), this.getY() + pawnForward(2)});
     }
 
     // captures
-    if (this.canCapture(this.x - 1, this.y + pawnForward(1))) {
-      result.add(new Integer[] {this.x - 1, this.y + pawnForward(1)});
+    if (this.canCapture(this.getX() - 1, this.getY() + pawnForward(1))) {
+      result.add(new Integer[] {this.getX() - 1, this.getY() + pawnForward(1)});
     }
-    if (this.canCapture(this.x + 1, this.y + pawnForward(1))) {
-      result.add(new Integer[] {this.x - 1, this.y + pawnForward(1)});
+    if (this.canCapture(this.getX() + 1, this.getY() + pawnForward(1))) {
+      result.add(new Integer[] {this.getX() - 1, this.getY() + pawnForward(1)});
     }
 
     return result;
@@ -164,12 +164,12 @@ public class Pawn extends ChessPiece {
     }
 
     // must be in an adjacent column
-    if (x != this.x + 1 && x != this.x - 1) {
+    if (x != this.getX() + 1 && x != this.getX() - 1) {
       return false;
     }
 
     // must be in the next row
-    if (y != this.y + pawnForward(1)) {
+    if (y != this.getY() + pawnForward(1)) {
       return false;
     }
 
@@ -209,7 +209,7 @@ public class Pawn extends ChessPiece {
     }
 
     // must be in an adjacent column
-    if (x != this.x + 1 && x != this.x - 1) { // assumes we are on a valid square
+    if (x != this.getX() + 1 && x != this.getX() - 1) { // assumes we are on a valid square
       return false;
     }
 
@@ -225,7 +225,7 @@ public class Pawn extends ChessPiece {
     // is negative.
     // This also assumes that double jump has only happened on the first move, i.e. that canMove()
     // has done its job.
-    if (target.prevY != target.y + pawnForward(2)) {
+    if (target.getPrevY() != target.getY() + pawnForward(2)) {
       return false;
     }
 
@@ -235,7 +235,7 @@ public class Pawn extends ChessPiece {
     }
 
     // pawns have to be next to each other
-    if (target.y != this.y) {
+    if (target.getY() != this.getY()) {
       return false;
     }
 

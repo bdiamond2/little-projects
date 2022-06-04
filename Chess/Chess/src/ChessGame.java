@@ -112,7 +112,7 @@ public class ChessGame {
     nextKing = this.board.getKing(this.whoseTurn.getColor());
 
     // if the next player's king is threatened...
-    if (this.board.isThreatened(nextKing.x, nextKing.y, this.notWhoseTurn.getColor())) {
+    if (this.board.isThreatened(nextKing.getX(), nextKing.getY(), this.notWhoseTurn.getColor())) {
       nextKing.setIsInCheck(true);
       checkForCheckmate();
     }
@@ -139,9 +139,9 @@ public class ChessGame {
           // loop through every possible (really potential) move
           for (Integer[] move : possibleMoves) {
             tempLastActive = this.mirror.lastActivePiece; // preserve the last active piece
-            if (this.tryMoveOnMirror(c.x, c.y, move[0], move[1])) {
+            if (this.tryMoveOnMirror(c.getX(), c.getY(), move[0], move[1])) {
               isCheckmate = false;
-              this.undoMirrorMove(nextKing.x, nextKing.y, move[0], move[1], tempLastActive);
+              this.undoMirrorMove(nextKing.getX(), nextKing.getY(), move[0], move[1], tempLastActive);
               break;
             }
           }
@@ -229,7 +229,7 @@ public class ChessGame {
     }
 
     // if the king is in check after this move then it's a no-go
-    if (this.mirror.isThreatened(mirrorKing.x, mirrorKing.y, this.notWhoseTurn.getColor())) {
+    if (this.mirror.isThreatened(mirrorKing.getX(), mirrorKing.getY(), this.notWhoseTurn.getColor())) {
       // undo the move, restore the mirror
       undoMirrorMove(x1, y1, x2, y2, mirrorLastActive);
       return false;
