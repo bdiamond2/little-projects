@@ -9,7 +9,8 @@ public class ChessGameTester {
   public static boolean runAllTests() {
     return testPawnMove() &&
         testCheck() &&
-        testCheckmate();
+        testCheckmate() &&
+        testRook();
   }
 
   public static boolean testPawnMove() {
@@ -348,6 +349,47 @@ public class ChessGameTester {
     }
 
     System.out.println(g);
+    return true;
+  }
+  
+  public static boolean testRook() {
+    ChessGame g = new ChessGame("Ben", "Maithilee");
+    String[] moves = new String[] {
+        "e2:e4",
+        "h8:h6",
+        "h8:h7",
+        "h8:f8",
+        "a2:a4",
+        "f7:f5",
+        "a1:a3",
+        "f5:e4",
+        "f2:f3",
+        "e4:f3",
+        "a3:g3",
+        "a3:f3",
+        "g7:g5",
+        "f3:f8",
+        "e8:d8",
+        "e7:e6",
+        "e8:f8",
+        "h2:h4",
+        "h7:h6",
+        "h4:h5",
+        "e7:e5",
+        "h1:h4",
+        "a8:e8",
+        "h4:f4",
+        "e8:e7",
+        "g5:f4"
+    };
+    
+    for (int i = 0; i < moves.length; i++) {
+      if (i >= moves.length - 5) { // problem move
+        System.out.println("Here it comes...");
+      }
+      g.nextTurnNotation(moves[i].substring(0, 2), moves[i].substring(3, 5));
+    }
+    
     return true;
   }
 

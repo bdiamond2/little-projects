@@ -128,8 +128,8 @@ public class ChessGame {
 
     // loop through all this player's pieces and see if any of them can move in a way that
     // ends check
-    for (int x = 0; x < ChessBoard.X_DIM; x++) {
-      for (int y = 0; y < ChessBoard.Y_DIM; y++) {
+    for (int x = 0; x < ChessBoard.X_DIM && isCheckmate; x++) {
+      for (int y = 0; y < ChessBoard.Y_DIM && isCheckmate; y++) {
         c = this.board.getSquare(x, y);
 
         // found one of our pieces
@@ -141,28 +141,13 @@ public class ChessGame {
             tempLastActive = this.mirror.lastActivePiece; // preserve the last active piece
             if (this.tryMoveOnMirror(c.getX(), c.getY(), move[0], move[1])) {
               isCheckmate = false;
-              this.undoMirrorMove(nextKing.getX(), nextKing.getY(), move[0], move[1], tempLastActive);
+              this.undoMirrorMove(c.getX(), c.getY(), move[0], move[1], tempLastActive);
               break;
             }
           }
         }
       }
     }
-    //    
-    //    // smothered mate
-    //    if (potentialKingMoves.size() == 0) {
-    //      this.winner = this.notWhoseTurn;
-    //    }
-    //
-    //    // look for any potential pieces
-    //    tempLastActive = this.mirror.lastActivePiece;
-    //    for (Integer[] move : potentialKingMoves) {
-    //      if (this.tryMoveOnMirror(nextKing.x, nextKing.y, move[0], move[1])) {
-    //        isCheckmate = false;
-    //        this.undoMirrorMove(nextKing.x, nextKing.y, move[0], move[1], tempLastActive);
-    //        break;
-    //      }
-    //    }
     if (isCheckmate) {
       this.winner = this.notWhoseTurn;
     }
