@@ -199,22 +199,39 @@ public class ChessBoard {
   }
 
   /**
-   * Checks whether there is a vertical or horizontal path between x1,y1 and x2,y2, EXCLUDING case
+   * Checks whether there is a horizontal path between x1,y1 and x2,y2, EXCLUDING case
    * where x1,y1 == x2,y2.
    * @param x1 x of square 1
    * @param y1 y of square 1
    * @param x2 x of square 2
    * @param y2 y of square 2
-   * @return true if there exists a horizontal or vertical path between x1,y1 and x2,y2 AND both
+   * @return true if there exists a horizontal path between x1,y1 and x2,y2 AND both
    * points are different, false if not
    */
-  public boolean hasHorizOrVertPath(int x1, int y1, int x2, int y2) {
+  public static boolean hasHorizontalPath(int x1, int y1, int x2, int y2) {
     if (!ChessBoard.isOnBoard(x1, y1) || !ChessBoard.isOnBoard(x2, y2)) {
       return false;
     }
       
-    // if dx XOR dy is zero that means it's up/down or left/right movement
-    return Math.abs(x2 - x1) == 0 ^ Math.abs(y2 - y1) == 0;
+    return Math.abs(x2 - x1) > 0 && Math.abs(y2 - y1) == 0;
+  }
+  
+  /**
+   * Checks whether there is a horizontal path between x1,y1 and x2,y2, EXCLUDING case
+   * where x1,y1 == x2,y2.
+   * @param x1 x of square 1
+   * @param y1 y of square 1
+   * @param x2 x of square 2
+   * @param y2 y of square 2
+   * @return true if there exists a horizontal path between x1,y1 and x2,y2 AND both
+   * points are different, false if not
+   */
+  public static boolean hasVerticalPath(int x1, int y1, int x2, int y2) {
+    if (!ChessBoard.isOnBoard(x1, y1) || !ChessBoard.isOnBoard(x2, y2)) {
+      return false;
+    }
+      
+    return Math.abs(x2 - x1) == 0 && Math.abs(y2 - y1) > 0;
   }
 
   /**
@@ -227,7 +244,7 @@ public class ChessBoard {
    * @return true if there exists a diagonal path between x1,y1 and x2,y2 AND both
    * points are different, false if not
    */
-  public boolean hasDiagonalPath(int x1, int y1, int x2, int y2) {
+  public static boolean hasDiagonalPath(int x1, int y1, int x2, int y2) {
     if (!ChessBoard.isOnBoard(x1, y1) || !ChessBoard.isOnBoard(x2, y2)) {
       return false;
     }
