@@ -17,6 +17,18 @@ public class ChessBoard {
     initialize();
   }
 
+  /**
+   * Places the given chess piece on the board according to the piece's own x,y.
+   * @param piece
+   * @throws IllegalArgumentException if the board's square is already occupied
+   */
+  private void placeChessPiece(ChessPiece piece) {
+    if (this.getSquare(piece.getX(), piece.getY()) != null) {
+      throw new IllegalArgumentException("The board square is already occupied");
+    }
+    board[piece.getX()][piece.getY()] = piece;
+  }
+  
   private void initialize() {
     // position is stored in both the board and piece
     // reference between board and pieces is two-way
@@ -38,13 +50,20 @@ public class ChessBoard {
 		board[7][7] = new Rook(ChessColor.BLACK, this, 7, 7);
      */
 
-    board[4][0] = new King(ChessColor.WHITE, this, 4, 0);
-    board[4][7] = new King(ChessColor.BLACK, this, 4, 7);
+    // kings
+    this.placeChessPiece(new King(ChessColor.WHITE, this, 4, 0));
+    this.placeChessPiece(new King(ChessColor.BLACK, this, 4, 7));
+    
+    // rooks
+    this.placeChessPiece(new Rook(ChessColor.WHITE, this, 0, 0));
+    this.placeChessPiece(new Rook(ChessColor.WHITE, this, 7, 0));
+    this.placeChessPiece(new Rook(ChessColor.BLACK, this, 0, 7));
+    this.placeChessPiece(new Rook(ChessColor.BLACK, this, 7, 7));
 
     // pawns
     for (int i = 0; i < 8; i++) {
-      board[i][1] = new Pawn(ChessColor.WHITE, this, i, 1);
-      board[i][6] = new Pawn(ChessColor.BLACK, this, i, 6);
+      this.placeChessPiece(new Pawn(ChessColor.WHITE, this, i, 1));
+      this.placeChessPiece(new Pawn(ChessColor.BLACK, this, i, 6));
     }
   }
 

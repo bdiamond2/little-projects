@@ -75,8 +75,22 @@ public class Rook extends ChessPiece {
 
   @Override
   public ArrayList<Integer[]> getPossibleMovesOrCaptures() {
+    ArrayList<Integer[]> ret = new ArrayList<Integer[]>();
     // TODO Auto-generated method stub
-    return null;
+    return ret;
+  }
+  
+  @Override
+  public String toString() {
+    if (this.getColor() == ChessColor.WHITE) {
+      return "\u2656";
+    }
+    else if (this.getColor() == ChessColor.BLACK) {
+      return "\u265C";
+    }
+    else {
+      throw new IllegalStateException("Rook must be black or white");
+    }
   }
 
 }
