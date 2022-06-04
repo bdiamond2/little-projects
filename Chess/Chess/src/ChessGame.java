@@ -18,6 +18,11 @@ public class ChessGame {
   // deep copy of the real board used for testing the legality of moves with respect to check
   ChessBoard mirror;
 
+  /**
+   * Creates a new ChessGame object
+   * @param p1White name of the player on white (goes first)
+   * @param p2Black name of the player on black (goes second)
+   */
   public ChessGame(String p1White, String p2Black) {
     this.white = new ChessPlayer(p1White, ChessColor.WHITE);
     this.black = new ChessPlayer(p2Black, ChessColor.BLACK);
@@ -55,14 +60,26 @@ public class ChessGame {
     }
   }
 
+  /**
+   * Returns the player whose turn it is
+   * @return ChessPlayer who should move next
+   */
   public ChessPlayer getWhoseTurn() {
     return this.whoseTurn;
   }
 
+  /**
+   * Checks if the game is over
+   * @return true if this game has a winner, false if not
+   */
   public boolean isGameOver() {
     return this.winner != null;
   }
 
+  /**
+   * Returns the winner of this game
+   * @return ChessPlayer who won this game
+   */
   public ChessPlayer getWinner() {
     return this.winner;
   }
@@ -106,19 +123,32 @@ public class ChessGame {
     // see if the next person is in check and if they're checkmated
     nextKing = this.board.getKing(this.whoseTurn.getColor());
 
-    // if the next player's king is threatened...
+    // if the next player's king is threatened (by the other color), update isInCheck
     if (this.board.isThreatened(nextKing.getX(), nextKing.getY(), this.notWhoseTurn.getColor())) {
       nextKing.setIsInCheck(true);
-      checkForCheckmate();
+      // if they're checkmated, assign the winner
+      if (isCheckmated(this.whoseTurn)) {
+        this.winner = this.notWhoseTurn;
+      }
     }
     return true;
   }
 
-  private void checkForCheckmate() {
+  /**
+   * Checks whether the given player is checkmated. ASSUMES THEIR King.isInCheck IS SET CORRECTLY.
+   * @param player
+   * @return
+   */
+  private boolean isCheckmated(ChessPlayer player) {
     ArrayList<Integer[]> possibleMoves;
     boolean isCheckmate = true;
     ChessPiece tempLastActive;
     ChessPiece c;
+
+    // can't be checkmated if you're not in check
+    if (!this.board.getKing(player.getColor()).getIsInCheck()) {
+      return false;
+    }
 
     // loop through all this player's pieces and see if any of them can move in a way that
     // ends check
@@ -134,17 +164,16 @@ public class ChessGame {
           for (Integer[] move : possibleMoves) {
             tempLastActive = this.mirror.lastActivePiece; // preserve the last active piece
             if (this.tryMoveOnMirror(c.getX(), c.getY(), move[0], move[1])) {
-              isCheckmate = false;
+              // if there's a move that escapes checkmate, undo the move and return false
               this.undoMirrorMove(c.getX(), c.getY(), move[0], move[1], tempLastActive);
-              break;
+              return false;
             }
           }
         }
       }
     }
-    if (isCheckmate) {
-      this.winner = this.notWhoseTurn;
-    }
+    // didn't find any checkmate-saving moves
+    return true;
   }
 
   /**

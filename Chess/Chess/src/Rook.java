@@ -119,5 +119,13 @@ public class Rook extends ChessPiece {
       throw new IllegalStateException("Rook must be black or white");
     }
   }
+  
+  /**
+   * Returns whether this Rook has moved or captured
+   * @return true if this Rook has moved or captured, false if not
+   */
+  public boolean getHasMovedOrCaptured() {
+    return this.hasMovedOrCaptured;
+  }
 
 }

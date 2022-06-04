@@ -385,7 +385,7 @@ public class ChessGameTester {
     
     for (int i = 0; i < moves.length; i++) {
       if (i >= moves.length - 5) { // problem move
-        System.out.println("Here it comes...");
+        System.out.println("Debug hook");
       }
       g.nextTurnNotation(moves[i].substring(0, 2), moves[i].substring(3, 5));
     }

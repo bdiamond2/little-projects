@@ -145,10 +145,18 @@ public class King extends ChessPiece {
     return moves;
   }
 
+  /**
+   * Returns the in-check status of this king
+   * @return true if this king is in check, false if not
+   */
   public boolean getIsInCheck() {
     return this.isInCheck;
   }
 
+  /**
+   * Modifies the in-check status of this king
+   * @param isInCheck true if king should now be in check, false if king is no longer in check
+   */
   public void setIsInCheck(boolean isInCheck) {
     this.isInCheck = isInCheck;
   }
