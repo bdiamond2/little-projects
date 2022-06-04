@@ -128,8 +128,8 @@ public class ChessGame {
 
     // loop through all this player's pieces and see if any of them can move in a way that
     // ends check
-    for (int x = 0; x <= 7; x++) {
-      for (int y = 0; y <= 7; y++) {
+    for (int x = 0; x < ChessBoard.X_DIM; x++) {
+      for (int y = 0; y < ChessBoard.Y_DIM; y++) {
         c = this.board.getSquare(x, y);
 
         // found one of our pieces

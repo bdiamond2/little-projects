@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 /**
  * Object representing a standard chess board with pieces on it. DOES NOT contain game-specific
  * logic, that lives in the ChessPiece-derived classes and in ChessGame. This class only stores
@@ -8,7 +6,9 @@ import java.util.ArrayList;
  *
  */
 public class ChessBoard {
-  private ChessPiece[][] board = new ChessPiece[8][8];
+  public static final int X_DIM = 8; // x dimension
+  public static final int Y_DIM = 8; // y dimension
+  private ChessPiece[][] board = new ChessPiece[X_DIM][Y_DIM];
   protected ChessPiece lastActivePiece;
   protected ChessGame game;
 
@@ -58,9 +58,9 @@ public class ChessBoard {
     String[] cols = new String[] {"A", "B", "C", "D", "E", "F", "G", "H"};
     String[] rows = new String[] {"1", "2", "3", "4", "5", "6", "7", "8"};
 
-    for (int y = 7; y >= 0; y--) {
+    for (int y = Y_DIM - 1; y >= 0; y--) {
       result += rows[y];
-      for (int x = 0; x <= 7; x++) {
+      for (int x = 0; x < X_DIM; x++) {
         if (board[x][y] == null) {
           nextSquare = "__";
         }
@@ -73,7 +73,7 @@ public class ChessBoard {
     }
 
     result += "   ";
-    for (int x = 0; x <= 7; x++) {
+    for (int x = 0; x < X_DIM; x++) {
       result += cols[x] + "   ";
     }
     result += "\n";
@@ -101,8 +101,8 @@ public class ChessBoard {
    * @return true if x and y are between 0-7 (inclusive), false if not
    */
   public static boolean isOnBoard(int x, int y) {
-    return x <= 7 && x >=0
-        && y <= 7 && y >= 0;
+    return x < X_DIM && x >= 0
+        && y < Y_DIM && y >= 0;
   }
 
   /**
@@ -167,8 +167,8 @@ public class ChessBoard {
     ChessPiece c;
     // don't use the players' material lists because we need to keep the focus on this
     // specific board object (because this might be a mirror board)
-    for (int row = 0; row <= 7; row++) {
-      for (int col = 0; col <= 7; col++) {
+    for (int row = 0; row < Y_DIM; row++) {
+      for (int col = 0; col < X_DIM; col++) {
         c = this.getSquare(col, row);
         // if the square is occupied, it's on the attacking side, and it can capture x,y
         if (c != null && c.getColor() == color && c.canCapture(x, y)) {
@@ -187,8 +187,8 @@ public class ChessBoard {
    */
   public King getKing(ChessColor color) {
     ChessPiece c;
-    for (int x = 0; x <= 7; x++) {
-      for (int y = 0; y <= 7; y++) {
+    for (int x = 0; x < X_DIM; x++) {
+      for (int y = 0; y < Y_DIM; y++) {
         c = this.getSquare(x, y);
         if (c instanceof King && c.getColor() == color) {
           return (King) c;
@@ -196,6 +196,14 @@ public class ChessBoard {
       }
     }
     throw new IllegalStateException("Each color must have a king present on the board");
+  }
+  
+  public boolean hasLinearPath(int x1, int y1, int x2, int y2) {
+    if (!ChessBoard.isOnBoard(x1, y1) || !ChessBoard.isOnBoard(x2, y2)) {
+      return false;
+    }
+    
+    return false;
   }
 
 }
