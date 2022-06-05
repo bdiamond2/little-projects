@@ -87,9 +87,10 @@ public abstract class ChessPiece {
       throw new IllegalArgumentException("Illegal move");
     }
 
+    // move the pieces on the board first so this.x is still the original
     this.board.move(this.x, this.y, x, y);
 
-    // update positions
+    // then update positions
     this.prevX = this.x;
     this.prevY = this.y;
     this.x = x;

@@ -34,6 +34,11 @@ public class King extends ChessPiece {
     if (!ChessBoard.isOnBoard(x, y)) {
       return false;
     }
+    
+    // automatic yes if it's a valid castle
+    if (this.canCastleKingside(x, y) || this.canCastleQueenside(x, y)) {
+      return true;
+    }
 
     // can't be a piece already there (this includes moving to the current position)
     if (this.board.getSquare(x, y) != null) {
@@ -104,17 +109,17 @@ public class King extends ChessPiece {
     final int colKingFrom = 4;
     final int colKingTo;
     final int colRookFrom;
-    final int colRookTo;
+//    final int colRookTo;
     
     if (mode == 1) {
       colKingTo = 6;
       colRookFrom = 7;
-      colRookTo = 5;
+//      colRookTo = 5;
     }
     else {
       colKingTo = 2;
       colRookFrom = 0;
-      colRookTo = 3;
+//      colRookTo = 3;
     }
     
     // path between king and rook must be clear
@@ -171,7 +176,38 @@ public class King extends ChessPiece {
 
   @Override
   public void move(int x, int y) {
+    boolean cK = false;
+    boolean cQ = false;
+    
+    // check for castling
+    cK = this.canCastleKingside(x, y);
+    if (!cK) { // can never be both
+      cQ = this.canCastleQueenside(x, y);
+    }
+
+    // move the king first because it calls canMove(), which only returns true if the king
+    // and rook are still in their pre-castling spots
     super.move(x, y);
+    
+    // move the rook
+    // use the stored cK/cQ values because calling canCastle...() now will return false because
+    // the king has moved positions
+    if (cK || cQ) {
+      Rook castlingRook;
+      if (cK) {
+        // if we're in this block then there better be a rook at 7,y
+        castlingRook = (Rook) this.board.getSquare(7, y);
+        castlingRook.castleRook(5);
+      }
+      else if (cQ) {
+        // if we're in this block then there better be a rook at 0,y
+        castlingRook = (Rook) this.board.getSquare(0, y);
+        castlingRook.castleRook(3);
+      }
+      // make last active the king rather than the rook
+      this.board.lastActivePiece = this; // make king last active, not the rook
+    }
+
     if (!this.hasMovedOrCaptured) { this.hasMovedOrCaptured = true; }
   }
 

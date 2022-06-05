@@ -279,6 +279,9 @@ public class ChessGame {
       // and then put it back on the mirror
       this.mirror.setSquare(x2, y2 - ((Pawn) pieceToMove).pawnForward(1), restoredWouldBeVictim);
     }
+    
+    // TODO: account for castling
+    
     else {
       // if this wasn't en passant, then the would-be victim is just the piece at destination
       restoredWouldBeVictim = restoredDestination;

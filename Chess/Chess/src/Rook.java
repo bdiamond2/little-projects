@@ -127,5 +127,21 @@ public class Rook extends ChessPiece {
   public boolean getHasMovedOrCaptured() {
     return this.hasMovedOrCaptured;
   }
+  
+  /**
+   * Naive position-setter that bypasses canMove(), to be used by King for castling purposes ONLY.
+   * Does not take a y because castling never moves the rook up or down.
+   * @param x column where this rook is castling to
+   */
+  protected void castleRook(int x) {
+    // do the board move first
+    this.board.move(this.getX(), this.getY(), x, this.getY());
+    
+    // then update the positions
+    this.setPrevX(this.getX());
+    this.setX(x);
+    
+    // otherwise this.x will be out of sync with the board
+  }
 
 }
