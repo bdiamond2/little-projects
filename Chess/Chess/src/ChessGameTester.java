@@ -351,7 +351,7 @@ public class ChessGameTester {
     System.out.println(g);
     return true;
   }
-  
+
   public static boolean testRook() {
     ChessGame g = new ChessGame("Ben", "Maithilee");
     String[] moves = new String[] {
@@ -382,14 +382,14 @@ public class ChessGameTester {
         "e8:e7",
         "g5:f4"
     };
-    
+
     for (int i = 0; i < moves.length; i++) {
       if (i >= moves.length - 5) { // problem move
         System.out.println("Debug hook");
       }
       g.nextTurnNotation(moves[i].substring(0, 2), moves[i].substring(3, 5));
     }
-    
+
     return true;
   }
 

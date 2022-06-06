@@ -34,7 +34,7 @@ public class King extends ChessPiece {
     if (!ChessBoard.isOnBoard(x, y)) {
       return false;
     }
-    
+
     // automatic yes if it's a valid castle
     if (this.canCastleKingside(x, y) || this.canCastleQueenside(x, y)) {
       return true;
@@ -76,9 +76,9 @@ public class King extends ChessPiece {
    * @return true if the move to x,y is a possible castle queenside, false if not
    */
   public boolean canCastleQueenside(int x, int y) {
-     return canCastleHelper(x, y, 0);
+    return canCastleHelper(x, y, 0);
   }
-  
+
   /**
    * Core helper function to check for kingside or queenside castling
    * @param x x of square for the king to move to
@@ -94,34 +94,34 @@ public class King extends ChessPiece {
     if (!ChessBoard.isOnBoard(x, y)) {
       return false;
     }
-    
+
     // king can't have moved
     if (this.hasMovedOrCaptured) {
       return false;
     }
-    
+
     // can't use castle to escape check
     if (this.isInCheck) {
       return false;
     }
-    
+
     // distinguishing kingside from queenside
     final int colKingFrom = 4;
     final int colKingTo;
     final int colRookFrom;
-//    final int colRookTo;
-    
+    //    final int colRookTo;
+
     if (mode == 1) {
       colKingTo = 6;
       colRookFrom = 7;
-//      colRookTo = 5;
+      //      colRookTo = 5;
     }
     else {
       colKingTo = 2;
       colRookFrom = 0;
-//      colRookTo = 3;
+      //      colRookTo = 3;
     }
-    
+
     // path between king and rook must be clear
     if (!this.board.hasClearHorizontalPath(this.getX(), this.getY(), colRookFrom, this.getY())) {
       return false;
@@ -134,12 +134,12 @@ public class King extends ChessPiece {
         || maybeRook.getColor() != this.getColor()) {
       return false;
     }
-    
+
     // the rook can't have moved
     if ( ((Rook) maybeRook).getHasMovedOrCaptured() ) {
       return false;
     }
-    
+
     // check source and target columns
     if (this.getX() != colKingFrom || x != colKingTo) {
       return false;
@@ -159,7 +159,7 @@ public class King extends ChessPiece {
     else {
       throw new IllegalStateException("Piece is neither black nor white");
     }
-    
+
     // none of the castling squares can be threatened
     // (this is slightly redundant because it checks all 3 squares, and we know the king isn't in check)
     int xStart = Math.min(colKingFrom, colKingTo);
@@ -178,7 +178,7 @@ public class King extends ChessPiece {
   public void move(int x, int y) {
     boolean cK = false;
     boolean cQ = false;
-    
+
     // check for castling
     cK = this.canCastleKingside(x, y);
     if (!cK) { // can never be both
@@ -188,7 +188,7 @@ public class King extends ChessPiece {
     // move the king first because it calls canMove(), which only returns true if the king
     // and rook are still in their pre-castling spots
     super.move(x, y);
-    
+
     // move the rook
     // use the stored cK/cQ values because calling canCastle...() now will return false because
     // the king has moved positions

@@ -29,7 +29,7 @@ public class ChessPlayer {
   public ChessColor getColor() {
     return this.color;
   }
-  
+
   public ArrayList<ChessPiece> getMaterial() {
     return this.material;
   }

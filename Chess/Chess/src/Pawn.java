@@ -101,8 +101,8 @@ public class Pawn extends ChessPiece {
     super.move(x, y); // respects canMove()
     if (!this.hasMovedOrCaptured) { this.hasMovedOrCaptured = true; }
 
-    // pawn has reached the end of the board (i.e. going one more step would be off the board)
-    if (!ChessBoard.isOnBoard(this.getX(), this.getY() + pawnForward(1))) {
+    // pawn has reached the end of the board
+    if (this.getY() == ChessBoard.Y_DIM - 1) {
       promote(); //TODO actually implement this
     }
   }

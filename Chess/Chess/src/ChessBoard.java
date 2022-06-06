@@ -28,7 +28,7 @@ public class ChessBoard {
     }
     board[piece.getX()][piece.getY()] = piece;
   }
-  
+
   private void initialize() {
     // position is stored in both the board and piece
     // reference between board and pieces is two-way
@@ -53,7 +53,7 @@ public class ChessBoard {
     // kings
     this.placeChessPiece(new King(ChessColor.WHITE, this, 4, 0));
     this.placeChessPiece(new King(ChessColor.BLACK, this, 4, 7));
-    
+
     // rooks
     this.placeChessPiece(new Rook(ChessColor.WHITE, this, 0, 0));
     this.placeChessPiece(new Rook(ChessColor.WHITE, this, 7, 0));
@@ -231,12 +231,12 @@ public class ChessBoard {
     if (!ChessBoard.isOnBoard(x1, y1) || !ChessBoard.isOnBoard(x2, y2)) {
       return false;
     }
-      
+
     // |dx| must be > 0 and |dy| must == 0
     if (Math.abs(x2 - x1) == 0 || Math.abs(y2 - y1) > 0) {
       return false;
     }
-    
+
     // now check if the path between the two points is clear
     // we're excluding x1,y1 because that would be occupied by the current piece
     boolean pathIsClear = true; // default to true, switch to false if we run into another piece
@@ -266,7 +266,7 @@ public class ChessBoard {
 
     return pathIsClear;
   }
-  
+
   /**
    * Checks whether there is an open vertical path between x1,y1 and x2,y2, EXCLUDING endpoints
    * @param x1 x of square 1
@@ -280,12 +280,12 @@ public class ChessBoard {
     if (!ChessBoard.isOnBoard(x1, y1) || !ChessBoard.isOnBoard(x2, y2)) {
       return false;
     }
-      
+
     // |dx| must be == 0 and |dy| must be > 0
     if (Math.abs(x2 - x1) > 0 || Math.abs(y2 - y1) == 0) {
       return false;
     }
-    
+
     // check if path between y1 and y2 (excluding endpoints) is clear
     boolean pathIsClear = true;
     int yStart;
@@ -304,7 +304,7 @@ public class ChessBoard {
       // shouldn't have returned true if they were equal
       throw new IllegalStateException("Logical error in hasClearVerticalPath()");
     }
-    
+
     // check that every square from this to y is clear
     for (int yLoop = yStart; yLoop <= yEnd; yLoop++) {
       if (this.getSquare(x1, yLoop) != null) { // found a piece blocking the way

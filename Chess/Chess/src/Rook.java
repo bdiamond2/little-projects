@@ -18,19 +18,6 @@ public class Rook extends ChessPiece {
    */
   public Rook(ChessColor color, ChessBoard board, int x, int y) {
     super("Rook", color, 5, board, x, y);
-    this.hasMovedOrCaptured = false;
-  }
-  
-  // is this better than getDeepCopy()?
-  /**
-   * Creates a deep copy of a given Rook object with the same attributes on a different board
-   * @param sourceRook Rook being copied
-   * @param newBoard new board that this piece is on
-   */
-  public Rook(Rook sourceRook, ChessBoard newBoard) {
-    super("Rook", sourceRook.getColor(), 5, newBoard, sourceRook.getX(), sourceRook.getY());
-    ChessPiece.copyBaseAttributes(sourceRook, this);
-    this.hasMovedOrCaptured = sourceRook.hasMovedOrCaptured;
   }
 
   @Override
@@ -137,11 +124,11 @@ public class Rook extends ChessPiece {
     // do the board move first
     this.board.move(this.getX(), this.getY(), x, this.getY());
     
-    // then update the positions
+    // then update the positions...
     this.setPrevX(this.getX());
     this.setX(x);
     
-    // otherwise this.x will be out of sync with the board
+    // ...otherwise this.x will be out of sync with the board
   }
 
 }

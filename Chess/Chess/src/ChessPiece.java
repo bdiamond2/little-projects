@@ -156,12 +156,12 @@ public abstract class ChessPiece {
     return isCaptured;
   }
 
-    /**
-     * Returns all the possible positions this piece could move
-     * @return ArrayList of [x,y] positions where this piece could move,null if there are no
-     * possible positions
-     */
-    public abstract ArrayList<Integer[]> getPossibleMovesOrCaptures();
+  /**
+   * Returns all the possible positions this piece could move
+   * @return ArrayList of [x,y] positions where this piece could move,null if there are no
+   * possible positions
+   */
+  public abstract ArrayList<Integer[]> getPossibleMovesOrCaptures();
 
   /**
    * Returns the color of this chess piece
@@ -186,7 +186,7 @@ public abstract class ChessPiece {
   public int getMaterialValue() {
     return materialValue;
   }
-  
+
   /**
    * Returns this piece's current x-position
    * @return this piece's current x-position
@@ -194,7 +194,7 @@ public abstract class ChessPiece {
   public int getX() {
     return this.x;
   }
-  
+
   /**
    * Returns this piece's current y-position
    * @return this piece's current y-position
@@ -202,7 +202,7 @@ public abstract class ChessPiece {
   public int getY() {
     return this.y;
   }
-  
+
   /**
    * Returns this piece's previous x-position
    * @return this piece's previous x-position
@@ -210,7 +210,7 @@ public abstract class ChessPiece {
   public int getPrevX() {
     return this.prevX;
   }
-  
+
   /**
    * Returns this piece's previous y-position
    * @return this piece's previous y-position
@@ -218,7 +218,7 @@ public abstract class ChessPiece {
   public int getPrevY() {
     return this.prevY;
   }
-  
+
   /**
    * Sets this piece's current x-position
    * @param x new x-position
@@ -226,15 +226,15 @@ public abstract class ChessPiece {
   public void setX(int x) {
     this.x = x;
   }
-  
+
   /**
    * Sets this piece's current y-position
    * @param y new y-position
    */
   public void setY(int y) {
-   this.y = y; 
+    this.y = y; 
   }
-  
+
   /**
    * Sets this piece's previous x-position
    * @param prevX new previous x-position
@@ -242,7 +242,7 @@ public abstract class ChessPiece {
   public void setPrevX(int prevX) {
     this.prevX = prevX;
   }
-  
+
   /**
    * Sets this piece's previous y-position
    * @param prevY new previous y-position
@@ -259,7 +259,7 @@ public abstract class ChessPiece {
   public String toString() {
     return this.COLOR + " " + this.NAME;
   }
-  
+
   /**
    * Checks whether two ChessPieces are equal. Primarily used for resetting the mirror board.
    * @return true if name, color, current position, previous position, capture status, AND
@@ -271,7 +271,7 @@ public abstract class ChessPiece {
       return false;
     }
     ChessPiece c = (ChessPiece) o;
-    
+
     return c.getClass().equals(this.getClass()) &&
         c.getColor() == this.getColor() &&
         c.getX() == this.getX() &&
