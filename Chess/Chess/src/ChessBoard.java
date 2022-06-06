@@ -244,17 +244,8 @@ public class ChessBoard {
     int xEnd;
     // we want this to work for both canMove() and canCapture() so we're excluding the squares
     // themselves and just checking what's between them
-    if (x2 < x1) { // looping from x2 -> x1 - 1
-      xStart = x2 + 1;
-      xEnd = x1 - 1;
-    }
-    else if (x2 > x1) { // looping from x1+1 -> x2
-      xStart = x1 + 1;
-      xEnd = x2 - 1;
-    }
-    else {
-      throw new IllegalStateException("Logical error in hasClearHorizontalPath()");
-    }
+    xStart = Math.min(x1, x2) + 1;
+    xEnd = Math.max(x1, x2) - 1;
 
     // check that every square from x1,y1 to x2,y2 is clear
     for (int xLoop = xStart; xLoop <= xEnd; xLoop++) {
@@ -292,18 +283,8 @@ public class ChessBoard {
     int yEnd;
     // we want this to work for both canMove() and canCapture() so we're excluding the squares
     // themselves and just checking what's between them
-    if (y2 < y1) {
-      yStart = y2 + 1;
-      yEnd = y1 - 1;
-    }
-    else if (y2 > y1) {
-      yStart = y1 + 1;
-      yEnd = y2 - 1;
-    }
-    else {
-      // shouldn't have returned true if they were equal
-      throw new IllegalStateException("Logical error in hasClearVerticalPath()");
-    }
+    yStart = Math.min(y1, y2) + 1;
+    yEnd = Math.max(y1, y2) - 1;
 
     // check that every square from this to y is clear
     for (int yLoop = yStart; yLoop <= yEnd; yLoop++) {
@@ -325,14 +306,38 @@ public class ChessBoard {
    * @return true if there exists a diagonal path between x1,y1 and x2,y2 AND both
    * points are different, false if not
    */
-  public static boolean hasDiagonalPath(int x1, int y1, int x2, int y2) {
+  public boolean hasClearDiagonalPath(int x1, int y1, int x2, int y2) {
     if (!ChessBoard.isOnBoard(x1, y1) || !ChessBoard.isOnBoard(x2, y2)) {
       return false;
     }
 
     // |dx| == |dy| && different coordinates => diagonal movement
     // logically unnecessary to check that y1 != y2 because we already know |dx| == |dy|
-    return Math.abs(x2 - x1) == Math.abs(y2 - y1) && x1 != x2;
+    if (Math.abs(x2 - x1) != Math.abs(y2 - y1) || x1 == x2) {
+      return false;
+    }
+    
+    boolean pathIsClear = true; // default to true
+    int xStart;
+    int xEnd;
+    int yStart;
+    int yEnd;
+    
+    xStart = Math.min(x1, x2) + 1;
+    xEnd = Math.max(x1, x2) - 1;
+    yStart = Math.min(y1, y2) + 1;
+    yEnd = Math.max(y1, y2) - 1;
+    
+    for (int xLoop = xStart; xLoop <= xEnd; xLoop++) {
+      for (int yLoop = yStart; yLoop <= yEnd; yLoop++) {
+        if (this.getSquare(xLoop, yLoop) != null) { // found a piece blocking the way
+          pathIsClear = false;
+          break;
+        }
+      }
+    }
+    
+    return pathIsClear;
 
   }
 
