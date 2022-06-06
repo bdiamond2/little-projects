@@ -259,6 +259,30 @@ public abstract class ChessPiece {
   public String toString() {
     return this.COLOR + " " + this.NAME;
   }
+  
+  /**
+   * Checks whether two ChessPieces are equal. Primarily used for resetting the mirror board.
+   * @return true if name, color, current position, previous position, capture status, AND
+   * material value are equal; false if not
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || !(o instanceof ChessPiece)) {
+      return false;
+    }
+    ChessPiece c = (ChessPiece) o;
+    
+    return c.getClass().equals(this.getClass()) &&
+        c.getColor() == this.getColor() &&
+        c.getX() == this.getX() &&
+        c.getY() == this.getY() &&
+        c.getPrevX() == this.getPrevX() &&
+        c.getPrevY() == this.getPrevY() &&
+        c.getIsCaptured() == this.getIsCaptured() &&
+        c.getMaterialValue() == this.getMaterialValue();
+    // purposefully NOT checking the board the piece is on because this is used for syncing
+    // the main board and the mirror board
+  }
 
 
 }

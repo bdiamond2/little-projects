@@ -141,7 +141,7 @@ public class ChessGame {
    */
   private boolean isCheckmated(ChessPlayer player) {
     ArrayList<Integer[]> possibleMoves;
-    ChessPiece tempLastActive;
+//    ChessPiece tempLastActive;
     ChessPiece c;
 
     // can't be checkmated if you're not in check
@@ -161,11 +161,12 @@ public class ChessGame {
 
           // loop through every possible (really potential) move
           for (Integer[] move : possibleMoves) {
-            tempLastActive = this.mirror.lastActivePiece; // preserve the last active piece
+//            tempLastActive = this.mirror.lastActivePiece; // preserve the last active piece
             
             if (this.tryMoveOnMirror(c.getX(), c.getY(), move[0], move[1])) {
               // if there's a move that escapes checkmate, undo the move and return false
-              this.undoMirrorMove(c.getX(), c.getY(), move[0], move[1], tempLastActive);
+//              this.undoMirrorMove(c.getX(), c.getY(), move[0], move[1], tempLastActive);
+              this.syncMirror();
               return false;
             }
           }
@@ -224,7 +225,7 @@ public class ChessGame {
     // try this move on the mirror board and see if we're in check afterwards
     King mirrorKing = this.mirror.getKing(this.whoseTurn.getColor());
     // preserve the current last active in case we need to restore it
-    ChessPiece mirrorLastActive = mirror.lastActivePiece;
+//    ChessPiece mirrorLastActive = mirror.lastActivePiece;
 
     if (mirrorPieceToMove.canMove(x2, y2)) {
       mirrorPieceToMove.move(x2, y2);
@@ -239,64 +240,106 @@ public class ChessGame {
     // if the king is in check after this move then it's a no-go
     if (this.mirror.isThreatened(mirrorKing.getX(), mirrorKing.getY(), this.notWhoseTurn.getColor())) {
       // undo the move, restore the mirror
-      undoMirrorMove(x1, y1, x2, y2, mirrorLastActive);
+//      undoMirrorMove(x1, y1, x2, y2, mirrorLastActive);
+      this.syncMirror();
       return false;
     }
     return true;
   }
 
+//  /**
+//   * Rolls back the move just done on the mirror board
+//   * @param x1 original x of piece that was moved
+//   * @param y1 original y of piece that was moved
+//   * @param x2 current x of the piece that was moved
+//   * @param y2 current y of the piece that was moved
+//   * @param prevLastActivePiece preserved lastActivePiece of mirror before this move was made
+//   */
+//  private void undoMirrorMove(int x1, int y1, int x2, int y2, ChessPiece prevLastActivePiece) {
+//    ChessPiece pieceToMove = this.board.getSquare(x1, y1);
+//    ChessPiece destination = this.board.getSquare(x2, y2);
+//    ChessPiece wouldBeVictim; // only different from destination if it's an en passant
+//    ChessPiece restoredPieceToMove = pieceToMove == null ? null : pieceToMove.getDeepCopy(mirror);
+//    ChessPiece restoredDestination = destination == null ? null : destination.getDeepCopy(mirror);;
+//    ChessPiece restoredWouldBeVictim;
+//
+//    // restore the source square and target square from deep copies taken from this.board
+//    this.mirror.setSquare(x1, y1, restoredPieceToMove);
+//    this.mirror.setSquare(x2, y2, restoredDestination);
+//
+//    // if this was an en passant move, restore the en passant'd piece (which is not on destination)
+//    if (pieceToMove instanceof Pawn && ((Pawn) pieceToMove).isEnPassant(x2, y2)) {
+//      // the pawn that would have been en passant'd
+//      wouldBeVictim = this.board.getSquare(x2, y2 - ((Pawn) pieceToMove).pawnForward(1));
+//
+//      // if wouldBeVictim is null then isEnPassant should have returned false
+//      if (wouldBeVictim == null) {
+//        throw new IllegalStateException("Cannot en passant capture an empty square");
+//      }
+//      // create a deep copy of the would-be victim
+//      restoredWouldBeVictim = wouldBeVictim.getDeepCopy(mirror);
+//      // and then put it back on the mirror
+//      this.mirror.setSquare(x2, y2 - ((Pawn) pieceToMove).pawnForward(1), restoredWouldBeVictim);
+//    }
+//    
+//    // TODO: account for castling
+//    
+//    else {
+//      // if this wasn't en passant, then the would-be victim is just the piece at destination
+//      restoredWouldBeVictim = restoredDestination;
+//    }
+//
+//    // restore lastActivePiece on the mirror
+//    // if lastActivePiece was captured as part of this move, then make it match restoredWouldBeVictim
+//    if (prevLastActivePiece.getIsCaptured()) {
+//      this.mirror.lastActivePiece = restoredWouldBeVictim;
+//    }
+//    // if lastActivePiece wasn't captured in this move, then just restore it from the previous reference
+//    else {
+//      this.mirror.lastActivePiece = prevLastActivePiece;
+//    }
+//
+//  }
+  
   /**
-   * Rolls back the move just done on the mirror board
-   * @param x1 original x of piece that was moved
-   * @param y1 original y of piece that was moved
-   * @param x2 current x of the piece that was moved
-   * @param y2 current y of the piece that was moved
-   * @param prevLastActivePiece preserved lastActivePiece of mirror before this move was made
+   * Resets the mirror board based on the state of the main board
    */
-  private void undoMirrorMove(int x1, int y1, int x2, int y2, ChessPiece prevLastActivePiece) {
-    ChessPiece pieceToMove = this.board.getSquare(x1, y1);
-    ChessPiece destination = this.board.getSquare(x2, y2);
-    ChessPiece wouldBeVictim; // only different from destination if it's an en passant
-    ChessPiece restoredPieceToMove = pieceToMove == null ? null : pieceToMove.getDeepCopy(mirror);
-    ChessPiece restoredDestination = destination == null ? null : destination.getDeepCopy(mirror);;
-    ChessPiece restoredWouldBeVictim;
-
-    // restore the source square and target square from deep copies taken from this.board
-    this.mirror.setSquare(x1, y1, restoredPieceToMove);
-    this.mirror.setSquare(x2, y2, restoredDestination);
-
-    // if this was an en passant move, restore the en passant'd piece (which is not on destination)
-    if (pieceToMove instanceof Pawn && ((Pawn) pieceToMove).isEnPassant(x2, y2)) {
-      // the pawn that would have been en passant'd
-      wouldBeVictim = this.board.getSquare(x2, y2 - ((Pawn) pieceToMove).pawnForward(1));
-
-      // if wouldBeVictim is null then isEnPassant should have returned false
-      if (wouldBeVictim == null) {
-        throw new IllegalStateException("Cannot en passant capture an empty square");
+  private void syncMirror() {
+    ChessPiece mainSquare;
+    ChessPiece mirrorSquare;
+    
+    // loop through every square, compare the two boards, and reset from the main board if different
+    for (int x = 0; x < ChessBoard.X_DIM; x++) {
+      for (int y = 0; y < ChessBoard.Y_DIM; y++) {
+        mainSquare = this.board.getSquare(x, y);
+        mirrorSquare = this.mirror.getSquare(x, y);
+        
+        if (mainSquare == null) {
+          if (mirrorSquare != null) {
+            this.mirror.setSquare(x, y, null);
+          }
+          else {
+            continue; // both are null
+          }
+        }
+        else { // mainSquare isn't null
+          if (!mainSquare.equals(mirrorSquare)) {
+            this.mirror.setSquare(x, y, mainSquare.getDeepCopy(mirror));
+          }
+          else {
+            continue; // both are already equal pieces
+          }
+        }
+        
       }
-      // create a deep copy of the would-be victim
-      restoredWouldBeVictim = wouldBeVictim.getDeepCopy(mirror);
-      // and then put it back on the mirror
-      this.mirror.setSquare(x2, y2 - ((Pawn) pieceToMove).pawnForward(1), restoredWouldBeVictim);
     }
     
-    // TODO: account for castling
+    // reset lastActivePiece
+    // point to the same coordinates of the main board's last active piece
+    int xLastActive = this.board.lastActivePiece.getX();
+    int yLastActive = this.board.lastActivePiece.getY();
+    this.mirror.lastActivePiece = this.mirror.getSquare(xLastActive, yLastActive);
     
-    else {
-      // if this wasn't en passant, then the would-be victim is just the piece at destination
-      restoredWouldBeVictim = restoredDestination;
-    }
-
-    // restore lastActivePiece on the mirror
-    // if lastActivePiece was captured as part of this move, then make it match restoredWouldBeVictim
-    if (prevLastActivePiece.getIsCaptured()) {
-      this.mirror.lastActivePiece = restoredWouldBeVictim;
-    }
-    // if lastActivePiece wasn't captured in this move, then just restore it from the previous reference
-    else {
-      this.mirror.lastActivePiece = prevLastActivePiece;
-    }
-
   }
 
   /**
