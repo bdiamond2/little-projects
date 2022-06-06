@@ -317,27 +317,38 @@ public class ChessBoard {
       return false;
     }
     
-    boolean pathIsClear = true; // default to true
     int xStart;
     int xEnd;
-    int yStart;
-    int yEnd;
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+    int slope = dy / dx; // should only be 1 or -1
+    
     
     xStart = Math.min(x1, x2) + 1;
     xEnd = Math.max(x1, x2) - 1;
-    yStart = Math.min(y1, y2) + 1;
-    yEnd = Math.max(y1, y2) - 1;
     
+    int yLoop;
     for (int xLoop = xStart; xLoop <= xEnd; xLoop++) {
-      for (int yLoop = yStart; yLoop <= yEnd; yLoop++) {
+      /**
+       * 1,1 -> 5,5
+       * x  y
+       * 2  (1 * 2-1) + 1 = 2
+       * 3  (1 * 3-1) + 1 = 3
+       * 4  (1 * 4-1) + 1 = 4
+       * 
+       * 1,4 -> 5,0
+       * x  y
+       * 2  (-1 * 2-1) + 4 = 3
+       * 3  (-1 + 3-1) + 4 = 2
+       * 4  (-1 + 4-1) + 4 = 1
+       */
+      yLoop = (slope * xLoop-xStart) + y1; // y = mx + b
         if (this.getSquare(xLoop, yLoop) != null) { // found a piece blocking the way
-          pathIsClear = false;
-          break;
+          return false;
         }
-      }
     }
     
-    return pathIsClear;
+    return true;
 
   }
 
