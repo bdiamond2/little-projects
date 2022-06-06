@@ -59,6 +59,12 @@ public class ChessBoard {
     this.placeChessPiece(new Rook(ChessColor.WHITE, this, 7, 0));
     this.placeChessPiece(new Rook(ChessColor.BLACK, this, 0, 7));
     this.placeChessPiece(new Rook(ChessColor.BLACK, this, 7, 7));
+    
+    // bishops
+    this.placeChessPiece(new Bishop(ChessColor.WHITE, this, 2, 0));
+    this.placeChessPiece(new Bishop(ChessColor.WHITE, this, 5, 0));
+    this.placeChessPiece(new Bishop(ChessColor.BLACK, this, 2, 7));
+    this.placeChessPiece(new Bishop(ChessColor.BLACK, this, 5, 7));
 
     // pawns
     for (int i = 0; i < 8; i++) {
@@ -319,30 +325,33 @@ public class ChessBoard {
     
     int xStart;
     int xEnd;
+    int yStart;
     int dx = x2 - x1;
     int dy = y2 - y1;
     int slope = dy / dx; // should only be 1 or -1
     
     
-    xStart = Math.min(x1, x2) + 1;
-    xEnd = Math.max(x1, x2) - 1;
+    xStart = Math.min(x1, x2);
+    xEnd = Math.max(x1, x2);
+    if (x2 < x1) {
+      yStart = y2;
+    }
+    else {
+      yStart = y1;
+    }
     
     int yLoop;
-    for (int xLoop = xStart; xLoop <= xEnd; xLoop++) {
-      /**
-       * 1,1 -> 5,5
+    for (int xLoop = xStart + 1; xLoop < xEnd; xLoop++) {
+      /*
+       * 5,0 -> 1,4
        * x  y
-       * 2  (1 * 2-1) + 1 = 2
-       * 3  (1 * 3-1) + 1 = 3
-       * 4  (1 * 4-1) + 1 = 4
-       * 
-       * 1,4 -> 5,0
-       * x  y
-       * 2  (-1 * 2-1) + 4 = 3
-       * 3  (-1 + 3-1) + 4 = 2
-       * 4  (-1 + 4-1) + 4 = 1
+       * (1, 4)
+       *  2  3
+       *  3  2
+       *  4  1
+       * (5, 0)
        */
-      yLoop = (slope * xLoop-xStart) + y1; // y = mx + b
+      yLoop = (slope * (xLoop-xStart)) + yStart; // y = mx + b
         if (this.getSquare(xLoop, yLoop) != null) { // found a piece blocking the way
           return false;
         }
