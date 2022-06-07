@@ -30,25 +30,6 @@ public class ChessBoard {
   }
 
   private void initialize() {
-    // position is stored in both the board and piece
-    // reference between board and pieces is two-way
-    /*
-		board[0][0] = new Rook(ChessColor.WHITE, this, 0, 0);
-		board[1][0] = new Knight(ChessColor.WHITE, this, 1, 0);
-		board[2][0] = new Bishop(ChessColor.WHITE, this, 2, 0);
-		board[3][0] = new Queen(ChessColor.WHITE, this, 3, 0);
-		board[5][0] = new Bishop(ChessColor.WHITE, this, 5, 0);
-		board[6][0] = new Knight(ChessColor.WHITE, this, 6, 0);
-		board[7][0] = new Rook(ChessColor.WHITE, this, 7, 0);
-		// there's probably a better way to do this...
-		board[0][7] = new Rook(ChessColor.BLACK, this, 0, 7);
-		board[1][7] = new Knight(ChessColor.BLACK, this, 1, 7);
-		board[2][7] = new Bishop(ChessColor.BLACK, this, 2, 7);
-		board[3][7] = new Queen(ChessColor.BLACK, this, 3, 7);
-		board[5][7] = new Bishop(ChessColor.BLACK, this, 5, 7);
-		board[6][7] = new Knight(ChessColor.BLACK, this, 6, 7);
-		board[7][7] = new Rook(ChessColor.BLACK, this, 7, 7);
-     */
 
     // kings
     this.placeChessPiece(new King(ChessColor.WHITE, this, 4, 0));
@@ -69,6 +50,12 @@ public class ChessBoard {
     this.placeChessPiece(new Bishop(ChessColor.WHITE, this, 5, 0));
     this.placeChessPiece(new Bishop(ChessColor.BLACK, this, 2, 7));
     this.placeChessPiece(new Bishop(ChessColor.BLACK, this, 5, 7));
+    
+    // kights
+    this.placeChessPiece(new Knight(ChessColor.WHITE, this, 1, 0));
+    this.placeChessPiece(new Knight(ChessColor.WHITE, this, 6, 0));
+    this.placeChessPiece(new Knight(ChessColor.BLACK, this, 1, 7));
+    this.placeChessPiece(new Knight(ChessColor.BLACK, this, 6, 7));
 
     // pawns
     for (int i = 0; i < 8; i++) {

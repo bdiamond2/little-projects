@@ -74,6 +74,7 @@ public class Queen extends ChessPiece {
     return moves;
   }
   
+  @Override
   public String toString() {
     if (getColor() == ChessColor.WHITE) {
       return "\u2655";
