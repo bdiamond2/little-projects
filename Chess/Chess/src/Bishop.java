@@ -8,7 +8,7 @@ public class Bishop extends ChessPiece {
 
   @Override
   public ChessPiece getDeepCopy(ChessBoard newBoard) {
-    Bishop deepCopy = new Bishop(this.getColor(), this.board, this.getX(), this.getY());
+    Bishop deepCopy = new Bishop(this.getColor(), newBoard, this.getX(), this.getY());
     ChessPiece.copyBaseAttributes(this, deepCopy);
     return deepCopy;
   }
@@ -46,8 +46,24 @@ public class Bishop extends ChessPiece {
 
   @Override
   public ArrayList<Integer[]> getPossibleMovesOrCaptures() {
-    // TODO Auto-generated method stub
-    return new ArrayList<Integer[]>(); // default return statement
+    ArrayList<Integer[]> moves = new ArrayList<Integer[]>();
+    int dx;
+    int[] yVals = new int[2];
+    
+    for (int x = 0; x < ChessBoard.X_DIM; x++) {
+      // it's hard to explain...just work it out on a board yourself
+      dx = x - this.getX();
+      yVals[0] = this.getY() + dx;
+      yVals[1] = this.getY() - dx;
+      
+      for (int y : yVals) {
+        if (this.canMove(x, y) || this.canCapture(x, y)) {
+          moves.add(new Integer[] {x, y});
+        }
+      }
+    }
+    
+    return moves;
   }
   
   @Override

@@ -10,13 +10,14 @@ public class ChessGameTester {
     return testPawnMove() &&
         testCheck() &&
         testCheckmate() &&
-        testRook();
+        testRook() &&
+        testBishop();
   }
 
   public static boolean testPawnMove() {
     System.out.println("\n\ntestPawnMove()...");
     ChessBoard b = new ChessBoard(null);
-    System.out.println(b);
+//    System.out.println(b);
 
     // WHITE PAWNS
 
@@ -54,7 +55,7 @@ public class ChessGameTester {
     }
 
     b.getSquare(0, 1).move(0, 3);
-    System.out.println(b);
+//    System.out.println(b);
 
     // no double move this time
     try {
@@ -68,7 +69,7 @@ public class ChessGameTester {
 
     b.getSquare(0, 3).move(0, 4);
     b.getSquare(0, 4).move(0, 5);
-    System.out.println(b);
+//    System.out.println(b);
 
     // collision
     if (b.getSquare(0, 5).canMove(0, 6)) {
@@ -113,21 +114,21 @@ public class ChessGameTester {
       return false;
     }
     b.getSquare(1, 6).move(1, 5);
-    System.out.println(b);
+//    System.out.println(b);
 
     // no subsequent double move
     if (b.getSquare(1, 5).canMove(1, 3)) {
       return false;
     }
     b.getSquare(1, 5).move(1, 4);
-    System.out.println(b);
+//    System.out.println(b);
 
     // ensure double first move
     if (!b.getSquare(2, 6).canMove(2, 4)) {
       return false;
     }
     b.getSquare(2, 6).move(2, 4);
-    System.out.println(b);
+//    System.out.println(b);
 
     // black pawns can't move backwards
     if (b.getSquare(2, 4).canMove(2, 5)) {
@@ -137,74 +138,74 @@ public class ChessGameTester {
     return true;
   }
 
-  public static void testChessGameDriver() {
-    Scanner s = new Scanner(System.in);
-    ChessBoard b = new ChessBoard(null);
-    System.out.println(b);
+//  public static void testChessGameDriver() {
+//    Scanner s = new Scanner(System.in);
+//    ChessBoard b = new ChessBoard(null);
+////    System.out.println(b);
+//
+//    while (promptInput(b, s)) {
+////      System.out.println(b);
+//    }
+//
+//    s.close();
+//  }
+//
+//  private static boolean promptInput(ChessBoard board, Scanner s) {
+//    String stop;
+//    int x1;
+//    int y1;
+//    int x2;
+//    int y2;
+//
+//    System.out.println("stop? ");
+//    stop = s.next();
+//    if (stop.equals("y") || stop.equals("yes")) {
+//      return false;
+//    }
+//
+//    System.out.print("x1: ");
+//    x1 = s.nextInt();
+//    System.out.print("y1: ");
+//    y1 = s.nextInt();
+//    System.out.print("x2: ");
+//    x2 = s.nextInt();
+//    System.out.print("y2: ");
+//    y2 = s.nextInt();
+//
+//    ChessPiece p = board.getSquare(x1, y1);
+//
+//    if (p != null) {
+//      if (p.canMove(x2, y2)) {
+//        p.move(x2, y2);
+//      }
+//      else if (p.canCapture(x2, y2)) {
+//        p.capture(x2, y2);
+//      }
+//      else {
+//        System.out.println("\nillegal move");
+//      }
+//    }
+//    else {
+//      System.out.println("\ninvalid input");
+//    }
+//
+//    return true;
+//
+//  }
 
-    while (promptInput(b, s)) {
-      System.out.println(b);
-    }
-
-    s.close();
-  }
-
-  private static boolean promptInput(ChessBoard board, Scanner s) {
-    String stop;
-    int x1;
-    int y1;
-    int x2;
-    int y2;
-
-    System.out.println("stop? ");
-    stop = s.next();
-    if (stop.equals("y") || stop.equals("yes")) {
-      return false;
-    }
-
-    System.out.print("x1: ");
-    x1 = s.nextInt();
-    System.out.print("y1: ");
-    y1 = s.nextInt();
-    System.out.print("x2: ");
-    x2 = s.nextInt();
-    System.out.print("y2: ");
-    y2 = s.nextInt();
-
-    ChessPiece p = board.getSquare(x1, y1);
-
-    if (p != null) {
-      if (p.canMove(x2, y2)) {
-        p.move(x2, y2);
-      }
-      else if (p.canCapture(x2, y2)) {
-        p.capture(x2, y2);
-      }
-      else {
-        System.out.println("\nillegal move");
-      }
-    }
-    else {
-      System.out.println("\ninvalid input");
-    }
-
-    return true;
-
-  }
-
-  public static boolean testNotationToCoordinates() {
-    String input = "a1";
-    int[] result;
-    result = ChessGame.notationToCoordinates(input);
-    System.out.println(input + ": " + result[0] + ", " + result[1]);
-    return true;
-  }
+//  public static boolean testNotationToCoordinates() {
+//    String input = "a1";
+//    int[] result;
+//    result = ChessGame.notationToCoordinates(input);
+//    System.out.println(input + ": " + result[0] + ", " + result[1]);
+//    return true;
+//  }
 
   public static boolean testCheck() {
     System.out.println("\n\ntestCheck()...");
     ChessGame g = new ChessGame("Ben", "Maithilee");
 
-    System.out.println(g);
+//    System.out.println(g);
     String[] moves = new String[] {
         "e2:e4",
         "f7:f6",
@@ -219,15 +220,15 @@ public class ChessGameTester {
     for (String m : moves) {
       g.nextTurnNotation(m.substring(0, 2), m.substring(3, 5));
     }
-    System.out.println(g);
+//    System.out.println(g);
 
     // make sure king is in check
     // state
-    if (!g.board.getKing(ChessColor.WHITE).getIsInCheck()) {
+    if (!g.getBoard().getKing(ChessColor.WHITE).getIsInCheck()) {
       return false;
     }
     // calculation
-    if (!g.board.isThreatened(5, 3, ChessColor.BLACK)) {
+    if (!g.getBoard().isThreatened(5, 3, ChessColor.BLACK)) {
       return false;
     }
 
@@ -237,13 +238,13 @@ public class ChessGameTester {
     }
 
     // check lastActive on the board and the mirror after failed move
-    if (g.board.lastActivePiece.getX() != 6 || g.board.lastActivePiece.getY() != 4) {
+    if (g.getBoard().lastActivePiece.getX() != 6 || g.getBoard().lastActivePiece.getY() != 4) {
       return false;
     }
     if (g.mirror.lastActivePiece.getX() != 6 || g.mirror.lastActivePiece.getY() != 4) {
       return false;
     }
-    if (g.board.getSquare(6, 4).getPrevX() != 6 || g.board.getSquare(6, 4).getPrevY() != 6) {
+    if (g.getBoard().getSquare(6, 4).getPrevX() != 6 || g.getBoard().getSquare(6, 4).getPrevY() != 6) {
       return false;
     }
     if (g.mirror.getSquare(6, 4).getPrevX() != 6 || g.mirror.getSquare(6, 4).getPrevY() != 6) {
@@ -259,7 +260,7 @@ public class ChessGameTester {
       return false;
     }
 
-    if (!g.board.getKing(ChessColor.WHITE).getIsInCheck()) {
+    if (!g.getBoard().getKing(ChessColor.WHITE).getIsInCheck()) {
       return false;
     }
     if (g.isGameOver()) {
@@ -270,7 +271,7 @@ public class ChessGameTester {
     if (!g.nextTurn(5, 3, 5, 4)) {
       return false;
     }
-    System.out.println(g);
+//    System.out.println(g);
 
     // test checkmate
     g.nextTurn(4, 7, 5, 6);
@@ -278,14 +279,14 @@ public class ChessGameTester {
     g.nextTurn(0, 6, 0, 5);
     g.nextTurn(6, 1, 6, 3);
     g.nextTurn(3, 6, 3, 5);
-    g.nextTurn(0, 1, 0, 2);
-    g.nextTurn(4, 6, 4, 5); // checkmate
-    System.out.println(g);
+//    g.nextTurn(0, 1, 0, 2);
+//    g.nextTurn(4, 6, 4, 5); // checkmate
+//    System.out.println(g);
 
     if (!g.isGameOver()) {
       return false;
     }
-    if (g.getWinner() != g.black) {
+    if (g.getWinner() != g.getPlayer(ChessColor.BLACK)) {
       return false;
     }
     try {
@@ -331,7 +332,7 @@ public class ChessGameTester {
       return false;
     }
 
-    System.out.println(g);
+//    System.out.println(g);
 
     // redo this, except make the checkmating pawn threatened by a white pawn
     g = new ChessGame("Ben", "Maithilee");
@@ -342,13 +343,13 @@ public class ChessGameTester {
     g.nextTurnNotation("g2", "g4"); // protecting pawn
     g.nextTurnNotation("f6", "f5");
 
-    System.out.println(g);
+//    System.out.println(g);
 
     if (g.isGameOver()) {
       return false;
     }
 
-    System.out.println(g);
+//    System.out.println(g);
     return true;
   }
 
@@ -385,10 +386,28 @@ public class ChessGameTester {
 
     for (int i = 0; i < moves.length; i++) {
       if (i >= moves.length - 5) { // problem move
-        System.out.println("Debug hook");
+//        System.out.println("Debug hook");
       }
       g.nextTurnNotation(moves[i].substring(0, 2), moves[i].substring(3, 5));
     }
+
+    return true;
+  }
+
+  public static boolean testBishop() {
+    ChessGame g = new ChessGame("Ben", "Maithilee");
+    String[] moves = new String[] {
+        "e2:e4",
+        "e7:e5",
+        "f1:c4"
+    };
+    
+    for (String m : moves) {
+      g.nextTurnNotation(m.substring(0, 2), m.substring(3, 5));
+      System.out.println(g);
+    }
+    
+    Object o = g.getBoard().getSquare(2,3).getPossibleMovesOrCaptures();
 
     return true;
   }

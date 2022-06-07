@@ -8,12 +8,12 @@ import java.util.ArrayList;
  *
  */
 public class ChessGame {
-  ChessPlayer white;
-  ChessPlayer black;
-  ChessBoard board;
-  ChessPlayer whoseTurn;
-  ChessPlayer notWhoseTurn;
-  ChessPlayer winner;
+  private ChessPlayer white;
+  private ChessPlayer black;
+  private ChessBoard board;
+  private ChessPlayer whoseTurn;
+  private ChessPlayer notWhoseTurn;
+  private ChessPlayer winner;
 
   // deep copy of the real board used for testing the legality of moves with respect to check
   ChessBoard mirror;
@@ -352,6 +352,27 @@ public class ChessGame {
     else {
       throw new IllegalStateException("Unknown chess color");
     }
+  }
+  
+  /**
+   * Returns the player of the given color
+   * @param color Black/White
+   * @return player on white if White is given, player on black if Black is given
+   */
+  public ChessPlayer getPlayer(ChessColor color) {
+    if (color == ChessColor.BLACK) {
+      return this.black;
+    }
+    else if (color == ChessColor.WHITE) {
+      return this.white;
+    }
+    else {
+      throw new IllegalArgumentException("Invalid color");
+    }
+  }
+  
+  public ChessBoard getBoard() {
+    return this.board;
   }
 
 }
