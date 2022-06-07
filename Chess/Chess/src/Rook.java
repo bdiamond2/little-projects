@@ -30,12 +30,7 @@ public class Rook extends ChessPiece {
 
   @Override
   public boolean canMove(int x, int y) {
-    if (!ChessBoard.isOnBoard(x, y)) {
-      return false;
-    }
-    
-    // can't move to occupied space (only capture)
-    if (this.board.getSquare(x, y) != null) {
+    if (!canMoveBasic(x, y)) {
       return false;
     }
 
@@ -51,14 +46,7 @@ public class Rook extends ChessPiece {
 
   @Override
   public boolean canCapture(int x, int y) {
-    if (!ChessBoard.isOnBoard(x, y)) {
-      return false;
-    }
-    
-    // can't move to occupied space (only capture)
-    ChessPiece target = this.board.getSquare(x, y);
-    // capture square must contain a piece of the opposite color
-    if (target == null || target.getColor() == this.getColor()) {
+    if (!canCaptureBasic(x, y)) {
       return false;
     }
 

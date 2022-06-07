@@ -284,5 +284,17 @@ public abstract class ChessPiece {
     // the main board and the mirror board
   }
 
+  protected boolean canMoveBasic(int x, int y) {
+    return ChessBoard.isOnBoard(x, y) && this.board.getSquare(x, y) == null;
+  }
+  
+  protected boolean canCaptureBasic(int x, int y) {
+    if (!ChessBoard.isOnBoard(x, y)) {
+      return false;
+    }
+    ChessPiece target = this.board.getSquare(x, y);
+    return target != null && target.getColor() != this.getColor();
+  }
+
 
 }

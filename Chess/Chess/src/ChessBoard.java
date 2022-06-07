@@ -53,6 +53,10 @@ public class ChessBoard {
     // kings
     this.placeChessPiece(new King(ChessColor.WHITE, this, 4, 0));
     this.placeChessPiece(new King(ChessColor.BLACK, this, 4, 7));
+    
+    // queens
+    this.placeChessPiece(new Queen(ChessColor.WHITE, this, 3, 0));
+    this.placeChessPiece(new Queen(ChessColor.BLACK, this, 3, 7));
 
     // rooks
     this.placeChessPiece(new Rook(ChessColor.WHITE, this, 0, 0));

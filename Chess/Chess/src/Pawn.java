@@ -272,7 +272,7 @@ public class Pawn extends ChessPiece {
     else {
       // For now, enforce white/black color with exceptions. Maybe later we'll build in logic for
       // weirder varieties of chess with other colors?
-      throw new IllegalStateException("Pawn must be white or black");
+      throw new IllegalArgumentException("Pawn must be white or black");
     }
   }
 

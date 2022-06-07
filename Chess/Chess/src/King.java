@@ -279,7 +279,7 @@ public class King extends ChessPiece {
       return "\u265A";
     }
     else {
-      throw new IllegalStateException("King must be black or white");
+      throw new IllegalArgumentException("King must be black or white");
     }
   }
 
