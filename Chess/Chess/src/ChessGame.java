@@ -14,6 +14,7 @@ public class ChessGame {
   private ChessPlayer whoseTurn;
   private ChessPlayer notWhoseTurn;
   private ChessPlayer winner;
+  private boolean isStalemate = false;
 
   // deep copy of the real board used for testing the legality of moves with respect to check
   ChessBoard mirror;
@@ -24,13 +25,13 @@ public class ChessGame {
    * @param p2Black name of the player on black (goes second)
    */
   public ChessGame(String p1White, String p2Black) {
-    this.white = new ChessPlayer(p1White, ChessColor.WHITE);
-    this.black = new ChessPlayer(p2Black, ChessColor.BLACK);
-    this.board = new ChessBoard(this);
-    this.whoseTurn = white; // white goes first
-    this.notWhoseTurn = black;
+    white = new ChessPlayer(p1White, ChessColor.WHITE);
+    black = new ChessPlayer(p2Black, ChessColor.BLACK);
+    board = new ChessBoard(this);
+    whoseTurn = white; // white goes first
+    notWhoseTurn = black;
 
-    this.mirror = new ChessBoard(this);
+    mirror = new ChessBoard(this);
 
     giveMaterialToPlayers();
   }
@@ -45,14 +46,14 @@ public class ChessGame {
 
     for (int i : rows) {
       for (int j = 0; j < 8; j++) {
-        c = this.board.getSquare(j, i);
+        c = board.getSquare(j, i);
         if (c == null) { continue; } // from before I'd implemented all the pieces
 
         if (i < 2) { // crude but effective
-          player = this.white;
+          player = white;
         }
         else {
-          player = this.black;
+          player = black;
         }
         player.giveMaterial(c);
       }
@@ -64,7 +65,7 @@ public class ChessGame {
    * @return ChessPlayer who should move next
    */
   public ChessPlayer getWhoseTurn() {
-    return this.whoseTurn;
+    return whoseTurn;
   }
 
   /**
@@ -72,7 +73,7 @@ public class ChessGame {
    * @return true if this game has a winner, false if not
    */
   public boolean isGameOver() {
-    return this.winner != null;
+    return winner != null || isStalemate;
   }
 
   /**
@@ -80,7 +81,7 @@ public class ChessGame {
    * @return ChessPlayer who won this game
    */
   public ChessPlayer getWinner() {
-    return this.winner;
+    return winner;
   }
 
   /**
@@ -93,7 +94,7 @@ public class ChessGame {
   public boolean nextTurnNotation(String square1, String square2) {
     int[] src = ChessGame.notationToCoordinates(square1);
     int[] tgt = ChessGame.notationToCoordinates(square2);
-    return this.nextTurn(src[0], src[1], tgt[0], tgt[1]);
+    return nextTurn(src[0], src[1], tgt[0], tgt[1]);
   }
 
   /**
@@ -101,11 +102,11 @@ public class ChessGame {
    * @return true if the move was legal, false if not
    */
   public boolean nextTurn(int x1, int y1, int x2, int y2) {
-    if (this.isGameOver()) {
+    if (isGameOver()) {
       throw new IllegalStateException(winner + " already won the game");
     }
 
-    ChessPiece pieceToMove = this.board.getSquare(x1, y1);
+    ChessPiece pieceToMove = board.getSquare(x1, y1);
     King nextKing;
 
     // piece must exist and color of piece must match whose turn it is
@@ -119,59 +120,60 @@ public class ChessGame {
 
     toggleWhoseTurn();
 
-    // see if the next person is in check and if they're checkmated
-    nextKing = this.board.getKing(this.whoseTurn.getColor());
+    // update check for the next player
+    nextKing = board.getKing(whoseTurn.getColor());
+    nextKing.setIsInCheck(board.isThreatened(nextKing.getX(), nextKing.getY(),
+        notWhoseTurn.getColor()));
 
-    // if the next player's king is threatened (by the other color), update isInCheck
-    if (this.board.isThreatened(nextKing.getX(), nextKing.getY(), this.notWhoseTurn.getColor())) {
-      nextKing.setIsInCheck(true);
-      // if they're checkmated, assign the winner
-      if (isCheckmated(this.whoseTurn)) {
-        this.winner = this.notWhoseTurn;
+    // if the next player has no legal moves, check for checkmate or stalemate
+    if (!whoseTurnHasLegalMove()) {
+      // if they're in check, that's checkmate
+      if (nextKing.getIsInCheck()) {
+        winner = notWhoseTurn;
+      }
+      // stalemate
+      else {
+        isStalemate = true;
       }
     }
+    
     return true;
   }
 
   /**
-   * Checks whether the given player is checkmated. ASSUMES THEIR King.isInCheck IS SET CORRECTLY.
-   * @param player
-   * @return
+   * Checks whether or not the person whose turn it is has any available legal moves. A legal move
+   * is any move that results in the player not being in check.
+   * @return true if the player has at least one legal move, false if not
    */
-  private boolean isCheckmated(ChessPlayer player) {
+  private boolean whoseTurnHasLegalMove() {
     ArrayList<Integer[]> possibleMoves;
-    //    ChessPiece tempLastActive;
     ChessPiece c;
-
-    // can't be checkmated if you're not in check
-    if (!this.board.getKing(player.getColor()).getIsInCheck()) {
-      return false;
-    }
 
     // loop through all this player's pieces and see if any of them can move in a way that
     // ends check
     for (int x = 0; x < ChessBoard.X_DIM; x++) {
       for (int y = 0; y < ChessBoard.Y_DIM; y++) {
-        c = this.board.getSquare(x, y);
+        c = board.getSquare(x, y);
 
-        // found one of our pieces
-        if (c != null && c.getColor() == this.whoseTurn.getColor()) {
+        // found one of the player's pieces
+        if (c != null && c.getColor() == whoseTurn.getColor()) {
           possibleMoves = c.getPossibleMovesOrCaptures();
 
-          // loop through every possible (really potential) move
+          // loop through every potential move
           for (Integer[] move : possibleMoves) {
 
-            if (this.tryMoveOnMirror(c.getX(), c.getY(), move[0], move[1])) {
-              // if there's a move that escapes checkmate, undo the move and return false
-              this.syncMirror();
-              return false;
+            if (tryMoveOnMirror(c.getX(), c.getY(), move[0], move[1])) {
+              // if the move is legal (wrt check), undo the move and return true
+              syncMirror();
+              return true;
             }
           }
         }
       }
     }
-    // didn't find any checkmate-saving moves if we made it this far
-    return true;
+
+    // didn't find any legal moves
+    return false;
   }
 
   /**
@@ -183,16 +185,18 @@ public class ChessGame {
    * @return true if the piece successfully moved, false if not
    */
   private boolean tryMove(int x1, int y1, int x2, int y2) {
-    ChessPiece pieceToMove = this.board.getSquare(x1, y1);
+    ChessPiece pieceToMove = board.getSquare(x1, y1);
 
 
-    // redundant, but we should do a null check wherever we're hoping it's not null
-    if (pieceToMove == null) { return false; }
+    // piece can't be null and it better belong to whose turn it is
+    if (pieceToMove == null || pieceToMove.getColor() != whoseTurn.getColor()) {
+      return false;
+    }
 
     if (!tryMoveOnMirror(x1, y1, x2, y2)) { return false; }
 
     // if we got this far we're not in check anymore (or we never were)
-    this.board.getKing(this.whoseTurn.getColor()).setIsInCheck(false);
+    board.getKing(whoseTurn.getColor()).setIsInCheck(false);
 
     // do the move for real
     if (pieceToMove.canMove(x2, y2)) {
@@ -217,10 +221,10 @@ public class ChessGame {
    * @return true if the move is possible without leading to check, false if not
    */
   private boolean tryMoveOnMirror(int x1, int y1, int x2, int y2) {
-    ChessPiece mirrorPieceToMove = this.mirror.getSquare(x1, y1);
+    ChessPiece mirrorPieceToMove = mirror.getSquare(x1, y1);
 
     // try this move on the mirror board and see if we're in check afterwards
-    King mirrorKing = this.mirror.getKing(this.whoseTurn.getColor());
+    King mirrorKing = mirror.getKing(whoseTurn.getColor());
     // preserve the current last active in case we need to restore it
     //    ChessPiece mirrorLastActive = mirror.lastActivePiece;
 
@@ -235,9 +239,9 @@ public class ChessGame {
     }
 
     // if the king is in check after this move then it's a no-go
-    if (this.mirror.isThreatened(mirrorKing.getX(), mirrorKing.getY(), this.notWhoseTurn.getColor())) {
+    if (mirror.isThreatened(mirrorKing.getX(), mirrorKing.getY(), notWhoseTurn.getColor())) {
       // undo the move, restore the mirror
-      this.syncMirror();
+      syncMirror();
       return false;
     }
     return true;
@@ -253,12 +257,12 @@ public class ChessGame {
     // loop through every square, compare the two boards, and reset from the main board if different
     for (int x = 0; x < ChessBoard.X_DIM; x++) {
       for (int y = 0; y < ChessBoard.Y_DIM; y++) {
-        mainSquare = this.board.getSquare(x, y);
-        mirrorSquare = this.mirror.getSquare(x, y);
+        mainSquare = board.getSquare(x, y);
+        mirrorSquare = mirror.getSquare(x, y);
 
         if (mainSquare == null) {
           if (mirrorSquare != null) {
-            this.mirror.setSquare(x, y, null);
+            mirror.setSquare(x, y, null);
           }
           else {
             continue; // both are null
@@ -266,7 +270,7 @@ public class ChessGame {
         }
         else { // mainSquare isn't null
           if (!mainSquare.equals(mirrorSquare)) {
-            this.mirror.setSquare(x, y, mainSquare.getDeepCopy(mirror));
+            mirror.setSquare(x, y, mainSquare.getDeepCopy(mirror));
           }
           else {
             continue; // both are already equal pieces
@@ -278,9 +282,9 @@ public class ChessGame {
 
     // reset lastActivePiece
     // point to the same coordinates of the main board's last active piece
-    int xLastActive = this.board.lastActivePiece.getX();
-    int yLastActive = this.board.lastActivePiece.getY();
-    this.mirror.lastActivePiece = this.mirror.getSquare(xLastActive, yLastActive);
+    int xLastActive = board.lastActivePiece.getX();
+    int yLastActive = board.lastActivePiece.getY();
+    mirror.lastActivePiece = mirror.getSquare(xLastActive, yLastActive);
 
   }
 
@@ -288,19 +292,19 @@ public class ChessGame {
    * Switches whoseTurn from white to black and vice-versa. Defaults to white if it's no one's turn.
    */
   private void toggleWhoseTurn() {
-    if (this.whoseTurn == this.white) {
-      this.whoseTurn = this.black;
-      this.notWhoseTurn = this.white;
+    if (whoseTurn == white) {
+      whoseTurn = black;
+      notWhoseTurn = white;
     }
     else {
-      this.whoseTurn = this.white;
-      this.notWhoseTurn = this.black;
+      whoseTurn = white;
+      notWhoseTurn = black;
     }
   }
 
   @Override
   public String toString() {
-    return this.board.toString();
+    return board.toString();
   }
 
   /**
@@ -353,7 +357,7 @@ public class ChessGame {
       throw new IllegalStateException("Unknown chess color");
     }
   }
-  
+
   /**
    * Returns the player of the given color
    * @param color Black/White
@@ -361,18 +365,18 @@ public class ChessGame {
    */
   public ChessPlayer getPlayer(ChessColor color) {
     if (color == ChessColor.BLACK) {
-      return this.black;
+      return black;
     }
     else if (color == ChessColor.WHITE) {
-      return this.white;
+      return white;
     }
     else {
       throw new IllegalArgumentException("Invalid color");
     }
   }
-  
+
   public ChessBoard getBoard() {
-    return this.board;
+    return board;
   }
 
 }
