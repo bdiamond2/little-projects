@@ -83,6 +83,10 @@ public class ChessGame {
   public ChessPlayer getWinner() {
     return winner;
   }
+  
+  public boolean getIsStalemate() {
+    return isStalemate;
+  }
 
   /**
    * Wrapper function for nextTurn() that takes conventional chessboard coordinates instead of

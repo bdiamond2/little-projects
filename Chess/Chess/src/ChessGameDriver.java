@@ -29,7 +29,15 @@ public class ChessGameDriver {
     while (true) {
       if (g.isGameOver()) {
         System.out.println(g);
-        System.out.println(g.getWinner() + " wins!");
+        if (g.getWinner() != null) {
+          System.out.println(g.getWinner() + " wins!");
+        }
+        else if (g.getIsStalemate()) {
+          System.out.println("Stalemate!");
+        }
+        else {
+          throw new IllegalStateException("Game cannot be over without a winner or stalemate");
+        }
         break;
       }
 
