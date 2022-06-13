@@ -237,17 +237,17 @@ public class ChessGameTester {
       return false;
     }
 
-    // check lastActive on the board and the mirror after failed move
+    // check lastActive on the board and the shadow after failed move
     if (g.getBoard().lastActivePiece.getX() != 6 || g.getBoard().lastActivePiece.getY() != 4) {
       return false;
     }
-    if (g.mirror.lastActivePiece.getX() != 6 || g.mirror.lastActivePiece.getY() != 4) {
+    if (g.shadow.lastActivePiece.getX() != 6 || g.shadow.lastActivePiece.getY() != 4) {
       return false;
     }
     if (g.getBoard().getSquare(6, 4).getPrevX() != 6 || g.getBoard().getSquare(6, 4).getPrevY() != 6) {
       return false;
     }
-    if (g.mirror.getSquare(6, 4).getPrevX() != 6 || g.mirror.getSquare(6, 4).getPrevY() != 6) {
+    if (g.shadow.getSquare(6, 4).getPrevX() != 6 || g.shadow.getSquare(6, 4).getPrevY() != 6) {
       return false;
     }
 

@@ -15,9 +15,11 @@ public class ChessGame {
   private ChessPlayer notWhoseTurn;
   private ChessPlayer winner;
   private boolean isStalemate = false;
+  private Pawn pawnToPromote;
+
 
   // deep copy of the real board used for testing the legality of moves with respect to check
-  ChessBoard mirror;
+  ChessBoard shadow;
 
   /**
    * Creates a new ChessGame object
@@ -31,7 +33,7 @@ public class ChessGame {
     whoseTurn = white; // white goes first
     notWhoseTurn = black;
 
-    mirror = new ChessBoard(this);
+    shadow = new ChessBoard(this);
 
     giveMaterialToPlayers();
   }
@@ -83,7 +85,7 @@ public class ChessGame {
   public ChessPlayer getWinner() {
     return winner;
   }
-  
+
   public boolean getIsStalemate() {
     return isStalemate;
   }
@@ -140,7 +142,15 @@ public class ChessGame {
         isStalemate = true;
       }
     }
-    
+
+    /* 
+     * TODO check for specific stalemate scenarios
+     * 1. Just kings
+     * 2. Just kings and a bishop
+     * 3. Three move rule?
+     * 4. Others?
+     */
+
     return true;
   }
 
@@ -166,9 +176,9 @@ public class ChessGame {
           // loop through every potential move
           for (Integer[] move : possibleMoves) {
 
-            if (tryMoveOnMirror(c.getX(), c.getY(), move[0], move[1])) {
+            if (tryMoveOnShadow(c.getX(), c.getY(), move[0], move[1])) {
               // if the move is legal (wrt check), undo the move and return true
-              syncMirror();
+              syncShadow();
               return true;
             }
           }
@@ -197,7 +207,7 @@ public class ChessGame {
       return false;
     }
 
-    if (!tryMoveOnMirror(x1, y1, x2, y2)) { return false; }
+    if (!tryMoveOnShadow(x1, y1, x2, y2)) { return false; }
 
     // if we got this far we're not in check anymore (or we never were)
     board.getKing(whoseTurn.getColor()).setIsInCheck(false);
@@ -210,71 +220,71 @@ public class ChessGame {
       pieceToMove.capture(x2, y2);
     }
     else {
-      throw new IllegalStateException("Primary and mirror board out of sync");
+      throw new IllegalStateException("Primary and shadow board out of sync");
     }
 
     return true;
   }
 
   /**
-   * Tries out the given move on the mirror board
+   * Tries out the given move on the shadow board
    * @param x1 x of piece to move
    * @param y1 y of piece to move
    * @param x2 x of square to move to
    * @param y2 y of square to move to
    * @return true if the move is possible without leading to check, false if not
    */
-  private boolean tryMoveOnMirror(int x1, int y1, int x2, int y2) {
-    ChessPiece mirrorPieceToMove = mirror.getSquare(x1, y1);
+  private boolean tryMoveOnShadow(int x1, int y1, int x2, int y2) {
+    ChessPiece shadowPieceToMove = shadow.getSquare(x1, y1);
 
-    // try this move on the mirror board and see if we're in check afterwards
-    King mirrorKing = mirror.getKing(whoseTurn.getColor());
+    // try this move on the shadow board and see if we're in check afterwards
+    King shadowKing = shadow.getKing(whoseTurn.getColor());
     // preserve the current last active in case we need to restore it
-    //    ChessPiece mirrorLastActive = mirror.lastActivePiece;
+    //    ChessPiece shadowLastActive = shadow.lastActivePiece;
 
-    if (mirrorPieceToMove.canMove(x2, y2)) {
-      mirrorPieceToMove.move(x2, y2);
+    if (shadowPieceToMove.canMove(x2, y2)) {
+      shadowPieceToMove.move(x2, y2);
     }
-    else if (mirrorPieceToMove.canCapture(x2, y2)) {
-      mirrorPieceToMove.capture(x2, y2);
+    else if (shadowPieceToMove.canCapture(x2, y2)) {
+      shadowPieceToMove.capture(x2, y2);
     }
     else {
-      return false; // if we can't move it on the mirror then don't even bother with the real board
+      return false; // if we can't move it on the shadow then don't even bother with the real board
     }
 
     // if the king is in check after this move then it's a no-go
-    if (mirror.isThreatened(mirrorKing.getX(), mirrorKing.getY(), notWhoseTurn.getColor())) {
-      // undo the move, restore the mirror
-      syncMirror();
+    if (shadow.isThreatened(shadowKing.getX(), shadowKing.getY(), notWhoseTurn.getColor())) {
+      // undo the move, restore the shadow
+      syncShadow();
       return false;
     }
     return true;
   }
 
   /**
-   * Resets the mirror board based on the state of the main board
+   * Resets the shadow board based on the state of the main board
    */
-  private void syncMirror() {
+  private void syncShadow() {
     ChessPiece mainSquare;
-    ChessPiece mirrorSquare;
+    ChessPiece shadowSquare;
 
     // loop through every square, compare the two boards, and reset from the main board if different
     for (int x = 0; x < ChessBoard.X_DIM; x++) {
       for (int y = 0; y < ChessBoard.Y_DIM; y++) {
         mainSquare = board.getSquare(x, y);
-        mirrorSquare = mirror.getSquare(x, y);
+        shadowSquare = shadow.getSquare(x, y);
 
         if (mainSquare == null) {
-          if (mirrorSquare != null) {
-            mirror.setSquare(x, y, null);
+          if (shadowSquare != null) {
+            shadow.setSquare(x, y, null);
           }
           else {
             continue; // both are null
           }
         }
         else { // mainSquare isn't null
-          if (!mainSquare.equals(mirrorSquare)) {
-            mirror.setSquare(x, y, mainSquare.getDeepCopy(mirror));
+          if (!mainSquare.equals(shadowSquare)) {
+            shadow.setSquare(x, y, mainSquare.getDeepCopy(shadow));
           }
           else {
             continue; // both are already equal pieces
@@ -288,7 +298,7 @@ public class ChessGame {
     // point to the same coordinates of the main board's last active piece
     int xLastActive = board.lastActivePiece.getX();
     int yLastActive = board.lastActivePiece.getY();
-    mirror.lastActivePiece = mirror.getSquare(xLastActive, yLastActive);
+    shadow.lastActivePiece = shadow.getSquare(xLastActive, yLastActive);
 
   }
 
