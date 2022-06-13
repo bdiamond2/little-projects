@@ -46,12 +46,12 @@ public class ChessGame {
     ChessPiece c;
     ChessPlayer player;
 
-    for (int i : rows) {
-      for (int j = 0; j < 8; j++) {
-        c = board.getSquare(j, i);
+    for (int y : rows) {
+      for (int x = 0; x < ChessBoard.X_DIM ; x++) {
+        c = board.getSquare(x, y);
         if (c == null) { continue; } // from before I'd implemented all the pieces
 
-        if (i < 2) { // crude but effective
+        if (x < 2) { // crude but effective
           player = white;
         }
         else {
@@ -119,7 +119,7 @@ public class ChessGame {
       throw new IllegalStateException(msg);
     }
     
-    // can't start a new turn until if there's an unresolved pawn promotion
+    // can't start a new turn if there's an unresolved pawn promotion
     if (pawnToPromote != null) {
       throw new IllegalStateException("Pawn at " + pawnToPromote.getX() +
           ", " + pawnToPromote.getY() + " needs a promotion first");
@@ -505,7 +505,7 @@ public class ChessGame {
     whoseTurn.removeMaterial(pawnToPromote);
     whoseTurn.giveMaterial(newPiece);
     
-    // finally, release the hold and resume the finish out the turn
+    // finally, release the hold and finish out the turn
     pawnToPromote = null;
     finishTurn();
     

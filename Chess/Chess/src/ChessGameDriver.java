@@ -67,7 +67,7 @@ public class ChessGameDriver {
 
       // prompt the player for a pawn promotion
       while (g.pawnNeedsPromotion()) {
-        System.out.println("Choose your pawn promotion: " +
+        System.out.println("\nChoose your pawn promotion: " +
             "\nQ - Queen" +
             "\nR - Rook" +
             "\nB - Bishop" +
