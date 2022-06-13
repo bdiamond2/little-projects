@@ -60,9 +60,21 @@ public class ChessGameDriver {
         break;
       }
 
+      // make the move
       if (!g.nextTurn(src[0], src[1], tgt[0], tgt[1])) {
         System.out.println("\nILLEGAL MOVE");
       }
+
+      // prompt the player for a pawn promotion
+      while (g.pawnNeedsPromotion()) {
+        System.out.println("Choose your pawn promotion: " +
+            "\nQ - Queen" +
+            "\nR - Rook" +
+            "\nB - Bishop" +
+            "\nN - Knight");
+        g.promotePawn(s.nextLine());
+      }
+
     }
 
     s.close();

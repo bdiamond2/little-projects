@@ -8,6 +8,7 @@ public class ChessPlayer {
   public ChessPlayer(String name, ChessColor color) {
     this.name = name;
     this.color = color;
+    
   }
 
   public int getTotalMaterialValue() {
@@ -41,6 +42,11 @@ public class ChessPlayer {
 
   public void giveMaterial(ChessPiece piece) {
     this.material.add(piece);
+  }
+  
+  
+  public void removeMaterial(ChessPiece piece) {
+    this.material.remove(piece);
   }
 
 }

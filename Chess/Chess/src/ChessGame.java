@@ -95,7 +95,7 @@ public class ChessGame {
    * array coordinates.
    * @param square1
    * @param square2
-   * @return
+   * @return true if the move was legal, false if not
    */
   public boolean nextTurnNotation(String square1, String square2) {
     int[] src = ChessGame.notationToCoordinates(square1);
@@ -109,21 +109,52 @@ public class ChessGame {
    */
   public boolean nextTurn(int x1, int y1, int x2, int y2) {
     if (isGameOver()) {
-      throw new IllegalStateException(winner + " already won the game");
+      String msg;
+      if (winner != null) {
+        msg = winner + " already won the game";
+      }
+      else { // stalemate
+        msg = "The game concluded in a stalemate";
+      }
+      throw new IllegalStateException(msg);
+    }
+    
+    // can't start a new turn until if there's an unresolved pawn promotion
+    if (pawnToPromote != null) {
+      throw new IllegalStateException("Pawn at " + pawnToPromote.getX() +
+          ", " + pawnToPromote.getY() + " needs a promotion first");
     }
 
     ChessPiece pieceToMove = board.getSquare(x1, y1);
-    King nextKing;
 
     // piece must exist and color of piece must match whose turn it is
     if (pieceToMove == null || pieceToMove.getColor() != whoseTurn.getColor()) {
       return false;
     }
 
+    // attempt to move the piece
     if (!tryMove(x1, y1, x2, y2)) {
       return false;
     }
+    
+    // check if that last move was a pawn promotion
+    if (needsPromotion(pieceToMove)) {
+      // halt the turn now and finish it once we have a promotion choice
+      pawnToPromote = (Pawn) pieceToMove;
+    }
+    else {
+      finishTurn();
+    }
 
+    return true;
+  }
+  
+  /**
+   * Concludes the person's turn after checking for/resolving a pawn promotion hold
+   */
+  private void finishTurn() {
+    King nextKing;
+    
     toggleWhoseTurn();
 
     // update check for the next player
@@ -142,7 +173,7 @@ public class ChessGame {
         isStalemate = true;
       }
     }
-
+    
     /* 
      * TODO check for specific stalemate scenarios
      * 1. Just kings
@@ -150,8 +181,7 @@ public class ChessGame {
      * 3. Three move rule?
      * 4. Others?
      */
-
-    return true;
+    
   }
 
   /**
@@ -389,8 +419,97 @@ public class ChessGame {
     }
   }
 
+  /**
+   * Returns the main board associated with this ChessGame
+   * @return main board for this game
+   */
   public ChessBoard getBoard() {
     return board;
+  }
+
+  /**
+   * Checks whether the piece that just moved was a pawn moving to the back row
+   * @param piece piece to check
+   * @return true if this is a pawn at its respective back row
+   */
+  private boolean needsPromotion(ChessPiece piece) {
+    if (!(piece instanceof Pawn)) {
+      return false;
+    }
+    
+    Pawn pawn = (Pawn) piece;
+    
+    // if it's a white pawn it must be at row 8
+    if (pawn.getColor() == ChessColor.WHITE && pawn.getY() != 7) {
+      return false;
+    }
+    // if it's a black pawn it must be at row 1
+    if (pawn.getColor() == ChessColor.BLACK && pawn.getY() != 0) {
+      return false;
+    }
+    
+    return true;
+  }
+  
+  /**
+   * Checks whether there is a pawn that is in need of promotion from the game driver.
+   * Suspends further game action until the pawn promotion is resolved.
+   * @return true if there is a pawn in need of promotion, false if not
+   */
+  public boolean pawnNeedsPromotion() {
+    return pawnToPromote != null;
+  }
+  
+  /**
+   * Promotes the pawn that is in need of promotion
+   * @param pieceCode
+   *    - Q: Queen
+   *    - R: Rook
+   *    - B: Bishop
+   *    - N: Knight
+   * @return true if the promotion was successful, false if not (invalid input)
+   */
+  public boolean promotePawn(String pieceCode) {
+    ChessColor color = pawnToPromote.getColor();
+    if (color != whoseTurn.getColor()) {
+      throw new IllegalStateException("Pawn promotion must occur during the promoter's turn");
+    }
+    
+    pieceCode = pieceCode.toUpperCase();
+    ChessPiece newPiece;
+    int x = pawnToPromote.getX();
+    int y = pawnToPromote.getY();
+    
+    if (pieceCode.equals("Q")) {
+      newPiece = new Queen(color, board, x, y);
+    }
+    else if (pieceCode.equals("R")) {
+      newPiece = new Rook(color, board, x, y);
+    }
+    else if (pieceCode.equals("B")) {
+      newPiece = new Bishop(color, board, x, y);
+    }
+    else if (pieceCode.equals("N")) {
+      newPiece = new Knight(color, board, x, y);
+    }
+    else {
+      return false;
+    }
+    
+    // update board and shadow
+    board.setSquare(x, y, newPiece);
+    board.lastActivePiece = newPiece;
+    syncShadow();
+    
+    // update player's material
+    whoseTurn.removeMaterial(pawnToPromote);
+    whoseTurn.giveMaterial(newPiece);
+    
+    // finally, release the hold and resume the finish out the turn
+    pawnToPromote = null;
+    finishTurn();
+    
+    return true;
   }
 
 }
